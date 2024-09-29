@@ -1,0 +1,6 @@
+{
+  "NotNullViolation": "الحقل {0} لا يمكن أن يكون فارغًا",
+  "UniqueViolation": "الحقل {0} يجب أن يكون فريدًا",
+  "ForeignKeyViolation": "الحقل {0} يجب أن يكون موجودًا",
+  "UnknownPostgresError": "حدث خطأ غير معروف"
+}

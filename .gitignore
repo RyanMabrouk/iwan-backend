@@ -1,0 +1,6 @@
+node_modules
+dist
+logs
+src/generated
+docker/local/api-postgres
+docker/prod/api-postgres
