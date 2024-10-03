@@ -1,5 +1,4 @@
 node_modules
-dist
 logs
 src/generated
 docker/local/api-postgres
