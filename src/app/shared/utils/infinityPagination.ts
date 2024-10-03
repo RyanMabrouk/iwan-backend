@@ -1,4 +1,4 @@
-import { InfinityPaginationResultType } from 'src/types/other/InfinityPaginationResultType';
+import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 
 export const infinityPagination = <T>(
   data: T[],

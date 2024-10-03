@@ -8,6 +8,7 @@ import {
   Optional,
   ValidationError,
   HttpStatus,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ITransaction } from '../../database/types/transaction';
@@ -32,6 +33,7 @@ import { extractNameFromErrorMessage } from '../utils/extractNameFromErrorMessag
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { IError, IValidationErrors } from 'src/types/other/error.type';
 import { I18nTranslations } from 'src/generated/i18n.generated';
+import { ERRORS } from 'src/assets/constants/errors';
 
 type I18nValidationExceptionFilterOptions =
   | I18nValidationExceptionFilterDetailedErrorsOption
@@ -52,6 +54,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     try {
       const i18n = I18nContext.current<I18nTranslations>(host);
+      if (!i18n) {
+        throw new InternalServerErrorException(ERRORS('Unexpected error!'));
+      }
       const lang = i18n?.lang;
       const status =
         exception instanceof HttpException

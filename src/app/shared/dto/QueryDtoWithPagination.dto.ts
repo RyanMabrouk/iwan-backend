@@ -1,4 +1,3 @@
-import { Transform } from 'class-transformer';
 import { IsNumber, IsPositive, Max } from 'class-validator';
 import { QueryDto } from './query.dto';
 import { InfinityPaginationQueryType } from 'src/types/other/InfinityPaginationQueryType';
@@ -10,14 +9,12 @@ export class QueryDtoWithPagination<
   extends QueryDto<EntityFilterKeys>
   implements InfinityPaginationQueryType<EntityFilterKeys>
 {
-  @Transform(({ value }) => (value ? Number(value) : 1))
   @IsNumber()
   @IsPositive()
-  page!: number;
+  page = 1;
 
-  @Transform(({ value }) => (value ? Number(value) : 20))
   @IsNumber()
   @IsPositive()
   @Max(50)
-  limit!: number;
+  limit = 20;
 }

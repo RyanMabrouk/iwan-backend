@@ -14,6 +14,8 @@ import { AppConfig } from './conf/types/app-config.type';
 import { AllExceptionsFilter } from './shared/exceptionFilters/AllExceptionsFilter.filter';
 import { RequestIdMiddleware } from './shared/middleware/RequestIdMiddleware';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './modules/users/user.module';
+import { BooksModule } from './modules/books/book.module';
 
 @Module({
   imports: [
@@ -76,6 +78,8 @@ import { AuthModule } from './auth/auth.module';
     DatabaseModule,
     LoggerModule,
     AuthModule,
+    UsersModule,
+    BooksModule,
   ],
   controllers: [AppController],
   providers: [

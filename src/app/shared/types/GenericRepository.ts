@@ -1,5 +1,5 @@
-import { UpdateResult, Insertable, Selectable } from 'kysely';
-import { InfinityPaginationResultType } from 'src/types/other/InfinityPaginationResultType';
+import { Insertable, Selectable } from 'kysely';
+import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 
 type UpdateArgs<TEntity, UpdateDto> = {
   [K in keyof TEntity]: TEntity[K];
@@ -12,18 +12,23 @@ export interface GenericRepository<
   UpdateDto = unknown,
   QueryDto = unknown,
 > {
-  findOne(
+  findMany?(): Promise<Selectable<TEntity>[]>;
+  findOne?(
     args: FindOneArgs<Selectable<TEntity>>,
   ): Promise<Selectable<TEntity> | null>;
-  findManyWithPagination(
+  findManyWithPagination?(
     query: QueryDto,
     ...args: unknown[]
   ): Promise<InfinityPaginationResultType<Selectable<TEntity>>>;
-  createOne(
-    payload: Insertable<TEntity>,
-  ): Promise<Selectable<Selectable<TEntity> | null> | null>;
-  updateOne(
+  createOne?(payload: Insertable<TEntity>): Promise<Selectable<TEntity> | null>;
+  updateOne?(
     args: UpdateArgs<Selectable<TEntity>, UpdateDto>,
-  ): Promise<UpdateResult | Selectable<TEntity> | null>;
-  deleteOne(args: FindOneArgs<Selectable<TEntity>>): Promise<UpdateResult>;
+  ): Promise<Selectable<TEntity> | null>;
+  deleteOne?(
+    args: FindOneArgs<Selectable<TEntity>>,
+  ): Promise<Selectable<TEntity> | null>;
+  createMany?(payload: Insertable<TEntity>[]): Promise<Selectable<TEntity>[]>;
+  deleteMany?(
+    args: FindOneArgs<Selectable<TEntity>>,
+  ): Promise<Selectable<TEntity>[]>;
 }
