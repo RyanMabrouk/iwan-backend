@@ -1,0 +1,15 @@
+{
+  "NotNullViolation": "الحقل {0} لا يمكن أن يكون فارغًا",
+  "UniqueViolation": "الحقل {0} يجب أن يكون فريدًا",
+  "ForeignKeyViolation": "الحقل {0} يجب أن يكون موجودًا",
+  "UnknownPostgresError": "حدث خطأ غير معروف",
+  "Unexpected error!": "خطأ غير متوقع!",
+  "User not found": "المستخدم غير موجود",
+  "Unauthorized": "غير مصرح",
+  "Validation failed (uuid is expected)": "فشل التحقق (يتوقع uuid)",
+  "Book not found": "الكتاب غير موجود",
+  "Failed to add category to book": "فشل في إضافة الفئة إلى الكتاب",
+  "Failed to add subcategory to book": "فشل في إضافة الفئة الفرعية إلى الكتاب",
+  "Failed to remove subcategory from book": "فشل في إزالة الفئة الفرعية من الكتاب",
+  "Failed to remove category from book": "فشل في إزالة الفئة من الكتاب"
+}

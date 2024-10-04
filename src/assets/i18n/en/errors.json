@@ -1,0 +1,15 @@
+{
+  "NotNullViolation": "Field {0} cannot be empty",
+  "UniqueViolation": "Field {0} must be unique",
+  "ForeignKeyViolation": "Field {0} must be present",
+  "UnknownPostgresError": "An unknown error occurred",
+  "Unexpected error!": "Unexpected error!",
+  "User not found": "User not found",
+  "Unauthorized": "Unauthorized",
+  "Validation failed (uuid is expected)": "Validation failed (uuid is expected)",
+  "Book not found": "Book not found",
+  "Failed to add category to book": "Failed to add category to book",
+  "Failed to add subcategory to book": "Failed to add subcategory to book",
+  "Failed to remove subcategory from book": "Failed to remove subcategory from book",
+  "Failed to remove category from book": "Failed to remove category from book"
+}
