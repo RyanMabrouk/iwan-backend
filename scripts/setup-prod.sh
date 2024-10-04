@@ -14,4 +14,6 @@ docker network create "prod-network"
 
 mkdir -p $directory/docker/prod/api-postgres
 
+cp $directory/.env $directory/docker/prod/.env
+
 docker compose -f docker/prod/docker-compose.yaml up -d --build

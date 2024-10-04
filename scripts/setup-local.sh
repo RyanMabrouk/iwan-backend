@@ -14,4 +14,6 @@ docker network create "local-network"
 
 mkdir -p $directory/docker/local/api-postgres
 
+cp $directory/.env $directory/docker/local/.env
+
 docker compose -f docker/local/docker-compose.yaml up -d --build
