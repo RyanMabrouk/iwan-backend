@@ -86,6 +86,9 @@ dependencies:
   pino-pretty:
     specifier: ^11.2.2
     version: 11.2.2
+  pnpm:
+    specifier: ^9.12.0
+    version: 9.12.0
   reflect-metadata:
     specifier: ^0.2.0
     version: 0.2.2
@@ -4882,6 +4885,12 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
     dev: true
+
+  /pnpm@9.12.0:
+    resolution: {integrity: sha512-Sr9yUITXvLr71yi/x77mHy95H5d/2HVCs1edyyNQTRcNRjN5ReTGZIXNEtWIoMDlcO2cR358zdhQfPBfP5Lqyg==}
+    engines: {node: '>=18.12'}
+    hasBin: true
+    dev: false
 
   /postgres-array@2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
