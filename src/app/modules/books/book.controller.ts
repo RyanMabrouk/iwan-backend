@@ -74,7 +74,7 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('category_id') category_id: string,
   ) {
-    return this.service.addCategoryToBook({ category_id, book_id });
+    return this.service.addCategoryToBook([{ category_id, book_id }]);
   }
 
   @Post(':book_id/subcategories/:subcategory_id')
@@ -82,7 +82,7 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('category_id') subcategory_id: string,
   ) {
-    return this.service.addSubcategoryToBook({ subcategory_id, book_id });
+    return this.service.addSubcategoryToBook([{ subcategory_id, book_id }]);
   }
 
   @Delete(':book_id/categories/:category_id')

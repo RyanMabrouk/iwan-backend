@@ -223,7 +223,7 @@ export class BookRepository
     }
   }
 
-  async addCategoryToBook(payload: NewBookCategory) {
+  async addCategoryToBook(payload: NewBookCategory[]) {
     try {
       const res = await this.trx
         .insertInto('book_categories')
@@ -236,7 +236,7 @@ export class BookRepository
     }
   }
 
-  async addSubcategoryToBook(payload: NewBookSubcategory) {
+  async addSubcategoryToBook(payload: NewBookSubcategory[]) {
     try {
       const res = await this.trx
         .insertInto('book_subcategories')

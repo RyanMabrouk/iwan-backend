@@ -9,6 +9,7 @@ import {
   IsArray,
   ArrayNotEmpty,
   IsUrl,
+  IsOptional,
 } from 'class-validator';
 import { BookStatusEnum, DiscountTypeEnum } from 'src/types/other/enums.types';
 import { NewBook } from '../infrastructure/entity/entity';
@@ -82,4 +83,16 @@ export class CreateBookDto implements NewBook {
   @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
   @IsUrl({}, { message: TranslateDto('IsUrl'), each: true })
   images_urls!: string[];
+
+  @IsOptional()
+  @IsArray({ message: TranslateDto('IsArray') })
+  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
+  @IsUUID(4, { message: TranslateDto('IsUUID'), each: true })
+  categories_ids?: string[];
+
+  @IsOptional()
+  @IsArray({ message: TranslateDto('IsArray') })
+  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
+  @IsUUID(4, { message: TranslateDto('IsUUID'), each: true })
+  subcategories_ids?: string[];
 }

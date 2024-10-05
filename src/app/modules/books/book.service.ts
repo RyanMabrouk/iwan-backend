@@ -66,6 +66,22 @@ export class BooksService {
     if (!createdEntity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }
+    if (payload.categories_ids) {
+      this.addCategoryToBook(
+        payload.categories_ids.map((category_id) => ({
+          category_id,
+          book_id: createdEntity.id,
+        })),
+      );
+    }
+    if (payload.subcategories_ids) {
+      this.addSubcategoryToBook(
+        payload.subcategories_ids.map((subcategory_id) => ({
+          subcategory_id,
+          book_id: createdEntity.id,
+        })),
+      );
+    }
     return createdEntity;
   }
 
@@ -77,7 +93,7 @@ export class BooksService {
     return deletedEntity;
   }
 
-  async addCategoryToBook(payload: NewBookCategory) {
+  async addCategoryToBook(payload: NewBookCategory[]) {
     const res = await this.repository.addCategoryToBook(payload);
     if (!res) {
       throw new InternalServerErrorException(
@@ -87,7 +103,7 @@ export class BooksService {
     return res;
   }
 
-  async addSubcategoryToBook(payload: NewBookSubcategory) {
+  async addSubcategoryToBook(payload: NewBookSubcategory[]) {
     const res = await this.repository.addSubcategoryToBook(payload);
     if (!res) {
       throw new InternalServerErrorException(

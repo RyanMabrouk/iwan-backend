@@ -75,12 +75,12 @@ export async function up(db: Kysely<unknown>) {
   await db
     .withSchema('public')
     .schema.createType('discount_type_enum')
-    .asEnum(['percentage', 'unavailable'])
+    .asEnum(['percentage', 'fixed'])
     .execute();
   await db
     .withSchema('public')
     .schema.createType('status_enum')
-    .asEnum(['available', 'fixed'])
+    .asEnum(['available', 'unavailable'])
     .execute();
   await db
     .withSchema('public')
