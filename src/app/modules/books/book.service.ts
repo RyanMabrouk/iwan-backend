@@ -61,22 +61,23 @@ export class BooksService {
   }: {
     payload: CreateBookDto;
   }): Promise<BookEntity> {
-    this.factory.createFromEntity(payload);
-    const createdEntity = await this.repository.createOne(payload);
+    const { categories_ids, subcategories_ids, ...rest } = payload;
+    this.factory.createFromEntity(rest);
+    const createdEntity = await this.repository.createOne(rest);
     if (!createdEntity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }
-    if (payload.categories_ids) {
+    if (categories_ids) {
       this.addCategoryToBook(
-        payload.categories_ids.map((category_id) => ({
+        categories_ids.map((category_id) => ({
           category_id,
           book_id: createdEntity.id,
         })),
       );
     }
-    if (payload.subcategories_ids) {
+    if (subcategories_ids) {
       this.addSubcategoryToBook(
-        payload.subcategories_ids.map((subcategory_id) => ({
+        subcategories_ids.map((subcategory_id) => ({
           subcategory_id,
           book_id: createdEntity.id,
         })),
