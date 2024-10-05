@@ -16,4 +16,3 @@ export interface KyselyCoverTypeEntity {
 export type CoverTypeEntity = Selectable<KyselyCoverTypeEntity>;
 export type NewCoverType = Insertable<KyselyCoverTypeEntity>;
 export type UpdateCoverType = Updateable<KyselyCoverTypeEntity>;
-export type IQueryCoverTypeKeys = `cover_types.${keyof KyselyCoverTypeEntity}`;

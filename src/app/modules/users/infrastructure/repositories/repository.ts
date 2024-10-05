@@ -1,13 +1,19 @@
 import { Inject } from '@nestjs/common';
 import { UpdateUserDto } from '../../dto/update.dto';
 import { QueryUserDto } from '../../dto/query.dto';
-import { UserEntity, IQueryUserKeys, KyselyUserEntity } from '../entity/entity';
+import {
+  UserEntity,
+  IQueryUserKeys,
+  KyselyUserEntity,
+  UserPopulated,
+} from '../entity/entity';
 import { GenericRepository } from 'src/app/shared/types/GenericRepository';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { PostgresError } from 'src/app/shared/Errors/PostgresError';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
+import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
 export class UserRepository
   implements GenericRepository<KyselyUserEntity, UpdateUserDto, QueryUserDto>
@@ -15,12 +21,24 @@ export class UserRepository
   constructor(
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
-  async findOne({ user_id }: { user_id: string }): Promise<UserEntity | null> {
+  async findOne({
+    user_id,
+  }: {
+    user_id: string;
+  }): Promise<UserPopulated | null> {
     try {
       const res = await this.trx
         .selectFrom('users')
         .where('user_id', '=', user_id)
         .selectAll()
+        .select((q) => [
+          jsonArrayFrom(
+            q
+              .selectFrom('addresses')
+              .whereRef(`addresses.user_id`, '=', `users.user_id`)
+              .selectAll(),
+          ).as('addresses'),
+        ])
         .executeTakeFirst();
       return res ?? null;
     } catch (err) {
@@ -30,7 +48,7 @@ export class UserRepository
 
   async findManyWithPagination(
     query: QueryUserDto,
-  ): Promise<InfinityPaginationResultType<UserEntity>> {
+  ): Promise<InfinityPaginationResultType<UserPopulated>> {
     try {
       const queryBuilder = this.trx
         .selectFrom('users')
@@ -68,6 +86,14 @@ export class UserRepository
             q.offset((query.page - 1) * query.limit),
           )
           .selectAll()
+          .select((q) => [
+            jsonArrayFrom(
+              q
+                .selectFrom('addresses')
+                .whereRef(`addresses.user_id`, '=', `users.user_id`)
+                .selectAll(),
+            ).as('addresses'),
+          ])
           .execute(),
         queryBuilder
           .select(this.trx.fn.countAll().as('count'))

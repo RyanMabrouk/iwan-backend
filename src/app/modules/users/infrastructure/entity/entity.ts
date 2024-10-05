@@ -6,6 +6,7 @@ import {
   Updateable,
 } from 'kysely';
 import { RolesEnum } from 'src/types/other/enums.types';
+import { AddressEntity } from '../../modules/addresses/infrastructure/entity';
 
 export interface KyselyUserEntity {
   user_id: ColumnType<string, string, never>;
@@ -18,6 +19,9 @@ export interface KyselyUserEntity {
 }
 
 export type UserEntity = Selectable<KyselyUserEntity>;
+export interface UserPopulated extends UserEntity {
+  addresses: AddressEntity[];
+}
 export type NewUser = Insertable<KyselyUserEntity>;
 export type UpdateUser = Updateable<KyselyUserEntity>;
 export type IQueryUserKeys = `users.${keyof KyselyUserEntity}`;

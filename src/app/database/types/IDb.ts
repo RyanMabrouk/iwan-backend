@@ -7,6 +7,7 @@ import { KyselyShareHouseEntity } from 'src/app/modules/books/modules/shareHouse
 import { KyselySubcategoryEntity } from 'src/app/modules/books/modules/subcategory/infrastructure/entity';
 import { KyselyWriterEntity } from 'src/app/modules/books/modules/writer/infrastructure/entity';
 import { KyselyUserEntity } from 'src/app/modules/users/infrastructure/entity/entity';
+import { KyselyAddressEntity } from 'src/app/modules/users/modules/addresses/infrastructure/entity';
 
 export interface IDb {
   users: KyselyUserEntity;
@@ -18,4 +19,5 @@ export interface IDb {
   book_categories: KyselyBookCategoryEntity;
   book_subcategories: KyselyBookSubcategoryEntity;
   share_houses: KyselyShareHouseEntity;
+  addresses: KyselyAddressEntity;
 }

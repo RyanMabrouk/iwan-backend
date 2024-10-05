@@ -17,5 +17,3 @@ export interface KyselySubcategoryEntity {
 export type SubcategoryEntity = Selectable<KyselySubcategoryEntity>;
 export type NewSubcategory = Insertable<KyselySubcategoryEntity>;
 export type UpdateSubcategory = Updateable<KyselySubcategoryEntity>;
-export type IQuerySubcategoryKeys =
-  `subcategories.${keyof KyselySubcategoryEntity}`;

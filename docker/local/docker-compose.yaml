@@ -1,7 +1,7 @@
 networks:
-  local-network:
+  iwan-local-network:
     external: true
-    name: local-network
+    name: iwan-local-network
     attachable: true
 volumes:
   api-postgres-data:
@@ -12,7 +12,7 @@ volumes:
       device: ./api-postgres
 x-common-config: &common-config
   networks:
-    - local-network
+    - iwan-local-network
 # x-postgres-common-config: &postgres-common-config
 #   <<: *common-config
 #   image: bitnami/postgresql:16.2.0-debian-12-r17
@@ -37,13 +37,13 @@ services:
   api:
     <<: *common-config
     build:
-      context: ../
+      context: ../../
       dockerfile: docker/local/Dockerfile
     container_name: api
     ports:
       - '${API_PORT}:${API_PORT}'
     volumes:
-      - ../:/app
+      - ../../:/app
       - /app/node_modules
     restart: unless-stopped
     # depends_on:

@@ -16,4 +16,3 @@ export interface KyselyCategoryEntity {
 export type CategoryEntity = Selectable<KyselyCategoryEntity>;
 export type NewCategory = Insertable<KyselyCategoryEntity>;
 export type UpdateCategory = Updateable<KyselyCategoryEntity>;
-export type IQueryCategoryKeys = `categories.${keyof KyselyCategoryEntity}`;

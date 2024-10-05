@@ -16,4 +16,3 @@ export interface KyselyWriterEntity {
 export type WriterEntity = Selectable<KyselyWriterEntity>;
 export type NewWriter = Insertable<KyselyWriterEntity>;
 export type UpdateWriter = Updateable<KyselyWriterEntity>;
-export type IQueryWriterKeys = `writers.${keyof KyselyWriterEntity}`;

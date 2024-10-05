@@ -37,14 +37,10 @@ services:
   api-prod:
     <<: *common-config
     build:
-      context: ../
       dockerfile: docker/prod/Dockerfile
     container_name: api-prod
     ports:
       - '${API_PORT}:${API_PORT}'
-    volumes:
-      - ../:/app
-      - /app/node_modules
     restart: unless-stopped
     # depends_on:
     # api-postgres:

@@ -16,4 +16,3 @@ export interface KyselyShareHouseEntity {
 export type ShareHouseEntity = Selectable<KyselyShareHouseEntity>;
 export type NewShareHouse = Insertable<KyselyShareHouseEntity>;
 export type UpdateShareHouse = Updateable<KyselyShareHouseEntity>;
-export type IQueryShareHouseKeys = `writers.${keyof KyselyShareHouseEntity}`;
