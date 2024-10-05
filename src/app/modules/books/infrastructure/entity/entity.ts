@@ -16,7 +16,7 @@ export interface KyselyBookEntity {
   name: string;
   title: string;
   writer_id: string;
-  share_house: string;
+  share_house_id: string;
   editor: string;
   release_year: number;
   description: string;
@@ -29,6 +29,7 @@ export interface KyselyBookEntity {
   price_usd: number;
   discount: number;
   discount_type: DiscountTypeEnum;
+  images_urls: string[];
   stock: number;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;

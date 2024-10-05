@@ -1,7 +1,7 @@
 {
-  "NotNullViolation": "الحقل {0} لا يمكن أن يكون فارغًا",
-  "UniqueViolation": "الحقل {0} يجب أن يكون فريدًا",
-  "ForeignKeyViolation": "الحقل {0} يجب أن يكون موجودًا",
+  "NotNullViolation": "الحقل {property} لا يمكن أن يكون فارغًا",
+  "UniqueViolation": "الحقل {property} يجب أن يكون فريدًا",
+  "ForeignKeyViolation": "الحقل {property} يجب أن يكون موجودًا",
   "UnknownPostgresError": "حدث خطأ غير معروف",
   "Unexpected error!": "خطأ غير متوقع!",
   "User not found": "المستخدم غير موجود",

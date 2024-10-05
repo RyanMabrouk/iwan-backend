@@ -6,6 +6,9 @@ import {
   Max,
   IsPositive,
   Min,
+  IsArray,
+  ArrayNotEmpty,
+  IsUrl,
 } from 'class-validator';
 import { BookStatusEnum, DiscountTypeEnum } from 'src/types/other/enums.types';
 import { NewBook } from '../infrastructure/entity/entity';
@@ -21,8 +24,8 @@ export class CreateBookDto implements NewBook {
   @IsUUID(4, { message: TranslateDto('IsUUID') })
   writer_id!: string;
 
-  @IsString({ message: TranslateDto('IsString') })
-  share_house!: string;
+  @IsUUID(4, { message: TranslateDto('IsUUID') })
+  share_house_id!: string;
 
   @IsString({ message: TranslateDto('IsString') })
   editor!: string;
@@ -74,4 +77,9 @@ export class CreateBookDto implements NewBook {
 
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   stock!: number;
+
+  @IsArray({ message: TranslateDto('IsArray') })
+  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
+  @IsUrl({}, { message: TranslateDto('IsUrl'), each: true })
+  images_urls!: string[];
 }
