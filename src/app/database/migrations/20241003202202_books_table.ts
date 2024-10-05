@@ -88,7 +88,6 @@ export async function up(db: Kysely<unknown>) {
     .addColumn('id', 'uuid', (col) =>
       col.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
-    .addColumn('name', 'text', (col) => col.defaultTo('').notNull())
     .addColumn('title', 'text', (col) => col.defaultTo('').notNull())
     .addColumn('writer_id', 'uuid', (col) =>
       col.references('writers.id').notNull().onDelete('cascade'),

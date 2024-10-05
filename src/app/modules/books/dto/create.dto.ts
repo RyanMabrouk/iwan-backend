@@ -17,9 +17,6 @@ import { TranslateDto } from 'src/app/shared/utils/TranslateDto';
 
 export class CreateBookDto implements NewBook {
   @IsString({ message: TranslateDto('IsString') })
-  name!: string;
-
-  @IsString({ message: TranslateDto('IsString') })
   title!: string;
 
   @IsUUID(4, { message: TranslateDto('IsUUID') })

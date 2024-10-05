@@ -14,7 +14,6 @@ import { ShareHouseEntity } from '../../modules/shareHouse/infrastructure/entity
 
 export interface KyselyBookEntity {
   id: GeneratedAlways<string>;
-  name: string;
   title: string;
   writer_id: string;
   share_house_id: string;
