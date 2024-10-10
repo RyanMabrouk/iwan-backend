@@ -15,22 +15,29 @@ import { ShareHouseEntity } from '../../modules/shareHouse/infrastructure/entity
 export interface KyselyBookEntity {
   id: GeneratedAlways<string>;
   title: string;
-  writer_id: string;
+  writer_id: string | null;
   share_house_id: string;
   editor: string;
-  release_year: number;
+  release_year: number | null;
   description: string;
   status: BookStatusEnum;
-  cover_type_id: string;
+  cover_type_id: string | null;
   weight: number;
   page_count: number;
   isbn: string;
   price: number;
-  price_usd: number;
+  price_after_discount: number;
+  price_dhs: number;
   discount: number;
   discount_type: DiscountTypeEnum;
   images_urls: string[];
   stock: number;
+  meta_title: string;
+  meta_description: string;
+  meta_image: string;
+  canonical: string;
+  slug: string;
+  structured_data: string;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;
 }

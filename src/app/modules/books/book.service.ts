@@ -13,6 +13,7 @@ import { ERRORS } from 'src/assets/constants/errors';
 import { CreateBookDto } from './dto/create.dto';
 import { NewBookCategory } from './infrastructure/entity/bookCategories';
 import { NewBookSubcategory } from './infrastructure/entity/bookSubcategories';
+import { Book } from './domain/domain';
 
 @Injectable()
 export class BooksService {
@@ -44,11 +45,48 @@ export class BooksService {
       points_balance?: number;
     };
   }): Promise<BookEntity> {
+    const { categories_ids, subcategories_ids, ...rest } = payload;
     const oldEntity = await this.findOne({ id });
-    this.factory.createFromEntity({ ...oldEntity, ...payload });
+    this.factory.createFromEntity({ ...oldEntity, ...rest });
     const updatedEntity = await this.repository.updateOne({
       id,
-      payload,
+      payload: rest,
+    });
+
+    if (!updatedEntity) {
+      throw new NotFoundException(ERRORS('Book not found'));
+    }
+    if (categories_ids) {
+      this.addCategoryToBook(
+        categories_ids.map((category_id) => ({
+          category_id,
+          book_id: id,
+        })),
+      );
+    }
+    if (subcategories_ids) {
+      this.addSubcategoryToBook(
+        subcategories_ids.map((subcategory_id) => ({
+          subcategory_id,
+          book_id: id,
+        })),
+      );
+    }
+    return updatedEntity;
+  }
+
+  async decrementStock({ id, quantity }: { id: string; quantity: number }) {
+    const book = await this.findOne({ id });
+    const old_stock = book.stock;
+    const new_quantity = old_stock - quantity;
+    if (new_quantity < 0) {
+      throw new InternalServerErrorException(ERRORS('Not enough stock'));
+    }
+    const updatedEntity = await this.repository.updateOne({
+      id,
+      payload: {
+        stock: old_stock - quantity,
+      },
     });
     if (!updatedEntity) {
       throw new NotFoundException(ERRORS('Book not found'));
@@ -62,8 +100,15 @@ export class BooksService {
     payload: CreateBookDto;
   }): Promise<BookEntity> {
     const { categories_ids, subcategories_ids, ...rest } = payload;
-    this.factory.createFromEntity(rest);
-    const createdEntity = await this.repository.createOne(rest);
+    const book = this.factory.createFromEntity({
+      ...rest,
+      price_after_discount: Book.calculatePriceAfterDiscount({
+        price: rest.price,
+        discount: rest.discount,
+        discount_type: rest.discount_type,
+      }),
+    });
+    const createdEntity = await this.repository.createOne(book.data);
     if (!createdEntity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }

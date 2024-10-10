@@ -19,6 +19,13 @@ export type I18nTranslations = {
         "Failed to add subcategory to book": string;
         "Failed to remove subcategory from book": string;
         "Failed to remove category from book": string;
+        "Order not found": string;
+        "All quantities must be greater than zero": string;
+        "Books must not be empty": string;
+        "Some books are not available": string;
+        "Order already canceled": string;
+        "Order already confirmed": string;
+        "Not enough stock": string;
     };
     "validation": {
         "IsString": string;

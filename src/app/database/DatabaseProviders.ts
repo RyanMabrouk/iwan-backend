@@ -27,6 +27,10 @@ export const DatabaseProviders = [
       pg.types.setTypeParser(numeric, (val) => {
         return parseInt(val, 10);
       });
+      const int8 = 20;
+      pg.types.setTypeParser(int8, (val) => {
+        return parseInt(val, 10);
+      });
       const pool = new pg.Pool({
         connectionString: appConf.dbUrl,
         max: appConf.databasePoolMax,

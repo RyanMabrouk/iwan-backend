@@ -11,5 +11,12 @@
   "Failed to add category to book": "فشل في إضافة الفئة إلى الكتاب",
   "Failed to add subcategory to book": "فشل في إضافة الفئة الفرعية إلى الكتاب",
   "Failed to remove subcategory from book": "فشل في إزالة الفئة الفرعية من الكتاب",
-  "Failed to remove category from book": "فشل في إزالة الفئة من الكتاب"
+  "Failed to remove category from book": "فشل في إزالة الفئة من الكتاب",
+  "Order not found": "الطلب غير موجود",
+  "All quantities must be greater than zero": "يجب أن تكون جميع الكميات أكبر من صفر",
+  "Books must not be empty": "يجب ألا تكون الكتب فارغة",
+  "Some books are not available": "بعض الكتب غير متوفرة",
+  "Order already canceled": "تم إلغاء الطلب بالفعل",
+  "Order already confirmed": "تم تأكيد الطلب بالفعل",
+  "Not enough stock": "الكمية غير كافية"
 }

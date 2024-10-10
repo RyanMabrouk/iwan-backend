@@ -11,5 +11,12 @@
   "Failed to add category to book": "Failed to add category to book",
   "Failed to add subcategory to book": "Failed to add subcategory to book",
   "Failed to remove subcategory from book": "Failed to remove subcategory from book",
-  "Failed to remove category from book": "Failed to remove category from book"
+  "Failed to remove category from book": "Failed to remove category from book",
+  "Order not found": "Order not found",
+  "All quantities must be greater than zero": "All quantities must be greater than zero",
+  "Books must not be empty": "Books must not be empty",
+  "Some books are not available": "Some books are not available",
+  "Order already canceled": "Order already canceled",
+  "Order already confirmed": "Order already confirmed",
+  "Not enough stock": "Not enough stock"
 }

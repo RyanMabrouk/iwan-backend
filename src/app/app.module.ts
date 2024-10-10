@@ -16,6 +16,7 @@ import { RequestIdMiddleware } from './shared/middleware/RequestIdMiddleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './modules/users/user.module';
 import { BooksModule } from './modules/books/book.module';
+import { OrdersModule } from './modules/payment/orders/orders.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { BooksModule } from './modules/books/book.module';
     AuthModule,
     UsersModule,
     BooksModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [

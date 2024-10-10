@@ -12,3 +12,15 @@ export enum DiscountTypeEnum {
   PERCENTAGE = 'percentage',
   FIXED = 'fixed',
 }
+
+export enum PaymentMethodEnum {
+  OnDELIVERY = 'onDelivery',
+  ONLINE = 'online',
+  BANK = 'bank',
+}
+
+export enum PaymentStatusEnum {
+  PENDING = 'pending',
+  PAID = 'paid',
+  CANCELED = 'canceled',
+}
