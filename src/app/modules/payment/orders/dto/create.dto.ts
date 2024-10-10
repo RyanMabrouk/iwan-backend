@@ -50,6 +50,5 @@ export class CreateOrderDto {
 
 export class CreateCancelOrderDto {
   @IsString({ message: TranslateDto('IsString') })
-  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   cancel_reason!: string;
 }

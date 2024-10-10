@@ -10,6 +10,7 @@ import { KyselyOrderEntity } from 'src/app/modules/payment/orders/infrastructure
 import { KyselyOrderProductEntity } from 'src/app/modules/payment/orders/modules/order_products/infrastructure/entity';
 import { KyselyUserEntity } from 'src/app/modules/users/infrastructure/entity/entity';
 import { KyselyAddressEntity } from 'src/app/modules/users/modules/addresses/infrastructure/entity';
+import { KyselyWishlistEntity } from 'src/app/modules/users/modules/wishlist/infrastructure/entity';
 
 export interface IDb {
   users: KyselyUserEntity;
@@ -24,4 +25,5 @@ export interface IDb {
   addresses: KyselyAddressEntity;
   orders: KyselyOrderEntity;
   orders_products: KyselyOrderProductEntity;
+  wishlists: KyselyWishlistEntity;
 }
