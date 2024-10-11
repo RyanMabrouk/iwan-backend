@@ -102,11 +102,13 @@ export class BooksService {
     const { categories_ids, subcategories_ids, ...rest } = payload;
     const book = this.factory.createFromEntity({
       ...rest,
-      price_after_discount: Book.calculatePriceAfterDiscount({
-        price: rest.price,
-        discount: rest.discount,
-        discount_type: rest.discount_type,
-      }),
+      price_after_discount: parseFloat(
+        Book.calculatePriceAfterDiscount({
+          price: parseFloat(rest.price.toFixed(2)),
+          discount: parseFloat(rest.discount.toFixed(2)),
+          discount_type: rest.discount_type,
+        }).toFixed(2),
+      ),
     });
     const createdEntity = await this.repository.createOne(book.data);
     if (!createdEntity) {
