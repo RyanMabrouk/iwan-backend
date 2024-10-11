@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely';
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>) {
   await db
@@ -28,6 +28,9 @@ export async function up(db: Kysely<unknown>) {
     .addColumn('structured_data', 'text', (col) => col.notNull().defaultTo(''))
     .addColumn('price_after_discount', 'int8', (col) =>
       col.notNull().defaultTo(0),
+    )
+    .addColumn('meta_keywords', sql`text[]`, (col) =>
+      col.notNull().defaultTo('{}'),
     )
     .execute();
 }
@@ -59,5 +62,6 @@ export async function down(db: Kysely<unknown>) {
     .dropColumn('slug')
     .dropColumn('structured_data')
     .dropColumn('price_after_discount')
+    .dropColumn('meta_keywords')
     .execute();
 }

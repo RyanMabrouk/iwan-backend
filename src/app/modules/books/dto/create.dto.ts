@@ -141,4 +141,10 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   @IsOptional()
   @IsString({ message: TranslateDto('IsString') })
   structured_data!: string;
+
+  @IsOptional()
+  @IsArray({ message: TranslateDto('IsArray') })
+  @IsString({ each: true, message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  meta_keywords!: string[];
 }

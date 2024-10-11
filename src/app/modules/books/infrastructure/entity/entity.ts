@@ -37,6 +37,7 @@ export interface KyselyBookEntity {
   meta_image: string;
   canonical: string;
   slug: string;
+  meta_keywords: string[];
   structured_data: string;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;

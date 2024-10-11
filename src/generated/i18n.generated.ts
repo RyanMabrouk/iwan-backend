@@ -27,6 +27,33 @@ export type I18nTranslations = {
         "Order already confirmed": string;
         "Not enough stock": string;
     };
+    "properties": {
+        "title": string;
+        "writer_id": string;
+        "share_house_id": string;
+        "editor": string;
+        "release_year": string;
+        "description": string;
+        "status": string;
+        "cover_type_id": string;
+        "weight": string;
+        "page_count": string;
+        "isbn": string;
+        "price": string;
+        "price_dhs": string;
+        "discount": string;
+        "discount_type": string;
+        "stock": string;
+        "images_urls": string;
+        "categories_ids": string;
+        "subcategories_ids": string;
+        "meta_title": string;
+        "meta_description": string;
+        "meta_image": string;
+        "canonical": string;
+        "slug": string;
+        "structured_data": string;
+    };
     "validation": {
         "IsString": string;
         "IsNotEmpty": string;
