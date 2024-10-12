@@ -104,10 +104,10 @@ export class BooksService {
       ...rest,
       price_after_discount: parseFloat(
         Book.calculatePriceAfterDiscount({
-          price: parseFloat(rest.price.toFixed(2)),
-          discount: parseFloat(rest.discount.toFixed(2)),
+          price: parseFloat(rest.price?.toFixed(2)),
+          discount: parseFloat(rest.discount?.toFixed(2)),
           discount_type: rest.discount_type,
-        }).toFixed(2),
+        })?.toFixed(2),
       ),
     });
     const createdEntity = await this.repository.createOne(book.data);
