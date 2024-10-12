@@ -74,7 +74,11 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('category_id') category_id: string,
   ) {
-    return this.service.addCategoryToBook([{ category_id, book_id }]);
+    const res = await this.service.addCategoryToBook([
+      { category_id, book_id },
+    ]);
+    this.trx.commit();
+    return res;
   }
 
   @Post(':book_id/subcategories/:subcategory_id')
@@ -82,7 +86,11 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('category_id') subcategory_id: string,
   ) {
-    return this.service.addSubcategoryToBook([{ subcategory_id, book_id }]);
+    const res = await this.service.addSubcategoryToBook([
+      { subcategory_id, book_id },
+    ]);
+    this.trx.commit();
+    return res;
   }
 
   @Delete(':book_id/categories/:category_id')
@@ -90,7 +98,12 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('category_id') category_id: string,
   ) {
-    return this.service.removeCategoryFromBook({ book_id, category_id });
+    const res = await this.service.removeCategoryFromBook({
+      book_id,
+      category_id,
+    });
+    this.trx.commit();
+    return res;
   }
 
   @Delete(':book_id/subcategories/:subcategory_id')
@@ -98,9 +111,11 @@ export class BooksController {
     @Param('book_id') book_id: string,
     @Param('subcategory_id') subcategory_id: string,
   ) {
-    return this.service.removeSubcategoryFromBook({
+    const res = await this.service.removeSubcategoryFromBook({
       book_id,
       subcategory_id,
     });
+    this.trx.commit();
+    return res;
   }
 }
