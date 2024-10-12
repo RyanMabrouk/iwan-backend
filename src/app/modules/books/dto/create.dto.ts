@@ -7,7 +7,6 @@ import {
   IsPositive,
   Min,
   IsArray,
-  ArrayNotEmpty,
   IsUrl,
   IsOptional,
   ValidateIf,
@@ -58,6 +57,7 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   cover_type_id!: string;
 
   @IsOptional()
+  @ValidateIf((o) => Number(o.weight) !== 0)
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   @IsPositive({ message: TranslateDto('IsPositive') })
   weight!: number;
@@ -72,16 +72,19 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   isbn!: string;
 
   @IsOptional()
+  @ValidateIf((o) => Number(o.price) !== 0)
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   @IsPositive({ message: TranslateDto('IsPositive') })
   price!: number;
 
   @IsOptional()
+  @ValidateIf((o) => Number(o.price_dhs) !== 0)
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   @IsPositive({ message: TranslateDto('IsPositive') })
   price_dhs!: number;
 
   @IsOptional()
+  @ValidateIf((o) => Number(o.discount) !== 0)
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   @IsPositive({ message: TranslateDto('IsPositive') })
   discount!: number;
@@ -102,19 +105,16 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
 
   @IsOptional()
   @IsArray({ message: TranslateDto('IsArray') })
-  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
   @IsUrl({}, { message: TranslateDto('IsUrl'), each: true })
   images_urls!: string[];
 
   @IsOptional()
   @IsArray({ message: TranslateDto('IsArray') })
-  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
   @IsUUID(4, { message: TranslateDto('IsUUID'), each: true })
   categories_ids?: string[];
 
   @IsOptional()
   @IsArray({ message: TranslateDto('IsArray') })
-  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
   @IsUUID(4, { message: TranslateDto('IsUUID'), each: true })
   subcategories_ids?: string[];
 
