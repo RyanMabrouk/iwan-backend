@@ -114,7 +114,7 @@ export class BooksService {
     if (!createdEntity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }
-    if (categories_ids) {
+    if (categories_ids && categories_ids.length > 0) {
       this.addCategoryToBook(
         categories_ids.map((category_id) => ({
           category_id,
@@ -122,7 +122,7 @@ export class BooksService {
         })),
       );
     }
-    if (subcategories_ids) {
+    if (subcategories_ids && subcategories_ids.length > 0) {
       this.addSubcategoryToBook(
         subcategories_ids.map((subcategory_id) => ({
           subcategory_id,
