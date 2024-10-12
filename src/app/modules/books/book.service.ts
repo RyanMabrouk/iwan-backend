@@ -142,6 +142,7 @@ export class BooksService {
   }
 
   async addCategoryToBook(payload: NewBookCategory[]) {
+    if (payload.length === 0) return [];
     const res = await this.repository.addCategoryToBook(payload);
     if (!res) {
       throw new InternalServerErrorException(
@@ -152,6 +153,7 @@ export class BooksService {
   }
 
   async addSubcategoryToBook(payload: NewBookSubcategory[]) {
+    if (payload.length === 0) return [];
     const res = await this.repository.addSubcategoryToBook(payload);
     if (!res) {
       throw new InternalServerErrorException(
