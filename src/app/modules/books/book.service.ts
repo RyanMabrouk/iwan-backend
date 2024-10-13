@@ -57,7 +57,15 @@ export class BooksService {
       throw new NotFoundException(ERRORS('Book not found'));
     }
     if (categories_ids) {
-      this.addCategoryToBook(
+      await Promise.all(
+        oldEntity.categories.map((category) =>
+          this.removeCategoryFromBook({
+            book_id: id,
+            category_id: category.id,
+          }),
+        ),
+      );
+      await this.addCategoryToBook(
         categories_ids.map((category_id) => ({
           category_id,
           book_id: id,
@@ -65,7 +73,15 @@ export class BooksService {
       );
     }
     if (subcategories_ids) {
-      this.addSubcategoryToBook(
+      await Promise.all(
+        oldEntity.subcategories.map((subcategory) =>
+          this.removeSubcategoryFromBook({
+            book_id: id,
+            subcategory_id: subcategory.id,
+          }),
+        ),
+      );
+      await this.addSubcategoryToBook(
         subcategories_ids.map((subcategory_id) => ({
           subcategory_id,
           book_id: id,
