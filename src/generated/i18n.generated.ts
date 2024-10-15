@@ -26,6 +26,7 @@ export type I18nTranslations = {
         "Order already canceled": string;
         "Order already confirmed": string;
         "Not enough stock": string;
+        "This order does not belong to you": string;
     };
     "properties": {
         "title": string;

@@ -1,7 +1,9 @@
+import { KyselyBannerEntity } from 'src/app/modules/banners/infrastructure/entity';
 import { KyselyBookCategoryEntity } from 'src/app/modules/books/infrastructure/entity/bookCategories';
 import { KyselyBookSubcategoryEntity } from 'src/app/modules/books/infrastructure/entity/bookSubcategories';
 import { KyselyBookEntity } from 'src/app/modules/books/infrastructure/entity/entity';
 import { KyselyCategoryEntity } from 'src/app/modules/books/modules/category/infrastructure/entity';
+import { KyselyCornerEntity } from 'src/app/modules/books/modules/corners/infrastructure/entity';
 import { KyselyCoverTypeEntity } from 'src/app/modules/books/modules/coverType/infrastructure/entity';
 import { KyselyShareHouseEntity } from 'src/app/modules/books/modules/shareHouse/infrastructure/entity';
 import { KyselySubcategoryEntity } from 'src/app/modules/books/modules/subcategory/infrastructure/entity';
@@ -26,4 +28,6 @@ export interface IDb {
   orders: KyselyOrderEntity;
   orders_products: KyselyOrderProductEntity;
   wishlists: KyselyWishlistEntity;
+  banners: KyselyBannerEntity;
+  corners: KyselyCornerEntity;
 }

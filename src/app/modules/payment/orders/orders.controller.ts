@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { AuthenticatedUser } from 'src/app/auth/AuthUser';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { OrderEntity } from './infrastructure/entity/entity';
@@ -59,8 +59,9 @@ export class OrdersController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: UpdateOrderDto,
+    @AuthenticatedUser() userJwt: ITokenPayload,
   ): Promise<OrderEntity> {
-    const res = await this.service.updateOne(id, payload);
+    const res = await this.service.updateOne(id, payload, userJwt.sub);
     this.trx.commit();
     return res;
   }

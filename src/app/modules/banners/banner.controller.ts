@@ -8,28 +8,28 @@ import {
   Param,
   Inject,
 } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { NewCategoryDto, UpdateCategoryDto } from './dto';
+import { BannersService } from './banner.service';
+import { NewBannerDto, UpdateBannerDto } from './dto';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
-import { CategoryEntity } from './infrastructure/entity';
+import { BannerEntity } from './infrastructure/entity';
 import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 
-@Controller('categories')
-export class CategoryController {
+@Controller('banners')
+export class BannersController {
   constructor(
-    private readonly categoryService: CategoryService,
+    private readonly categoryService: BannersService,
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
   @IsPublic()
   @Get()
-  async findMany(): Promise<CategoryEntity[]> {
+  async findMany(): Promise<BannerEntity[]> {
     return this.categoryService.findMany();
   }
 
   @Post()
-  async createOne(@Body() payload: NewCategoryDto): Promise<CategoryEntity> {
+  async createOne(@Body() payload: NewBannerDto): Promise<BannerEntity> {
     const res = await this.categoryService.createOne(payload);
     this.trx.commit();
     return res;
@@ -38,15 +38,15 @@ export class CategoryController {
   @Patch(':id')
   async updateOne(
     @Param('id') id: string,
-    @Body() payload: UpdateCategoryDto,
-  ): Promise<CategoryEntity> {
+    @Body() payload: UpdateBannerDto,
+  ): Promise<BannerEntity> {
     const res = await this.categoryService.updateOne(id, payload);
     this.trx.commit();
     return res;
   }
 
   @Delete(':id')
-  async deleteOne(@Param('id') id: string): Promise<CategoryEntity> {
+  async deleteOne(@Param('id') id: string): Promise<BannerEntity> {
     const res = this.categoryService.deleteOne(id);
     this.trx.commit();
     return res;

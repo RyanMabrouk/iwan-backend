@@ -18,5 +18,6 @@
   "Some books are not available": "Some books are not available",
   "Order already canceled": "Order already canceled",
   "Order already confirmed": "Order already confirmed",
-  "Not enough stock": "Not enough stock"
+  "Not enough stock": "Not enough stock",
+  "This order does not belong to you": "This order does not belong to you"
 }

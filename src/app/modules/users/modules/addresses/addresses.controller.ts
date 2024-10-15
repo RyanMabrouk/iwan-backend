@@ -13,7 +13,7 @@ import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { AddressEntity } from './infrastructure/entity';
 import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
-import { AuthenticatedUser } from 'src/app/auth/AuthUser';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
 
 @Controller('addresses')
 export class AddressController {

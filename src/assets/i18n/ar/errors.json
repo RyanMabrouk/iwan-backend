@@ -18,5 +18,6 @@
   "Some books are not available": "بعض الكتب غير متوفرة",
   "Order already canceled": "تم إلغاء الطلب بالفعل",
   "Order already confirmed": "تم تأكيد الطلب بالفعل",
-  "Not enough stock": "الكمية غير كافية"
+  "Not enough stock": "الكمية غير كافية",
+  "This order does not belong to you": "هذا الطلب لا ينتمي إليك"
 }

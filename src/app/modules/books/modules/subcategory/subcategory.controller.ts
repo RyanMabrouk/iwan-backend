@@ -13,6 +13,7 @@ import { NewSubcategoryDto, UpdateSubcategoryDto } from './dto';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { SubcategoryEntity } from './infrastructure/entity';
+import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 
 @Controller('subcategories')
 export class SubcategoryController {
@@ -21,6 +22,7 @@ export class SubcategoryController {
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  @IsPublic()
   @Get()
   async findMany(): Promise<SubcategoryEntity[]> {
     return this.SubcategoryService.findMany();

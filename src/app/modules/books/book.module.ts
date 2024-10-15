@@ -9,6 +9,7 @@ import { CoverTypeModule } from './modules/coverType/coverType.module';
 import { WriterModule } from './modules/writer/writer.module';
 import { SubcategoryModule } from './modules/subcategory/subcategory.module';
 import { ShareHouseModule } from './modules/shareHouse/shareHouse.module';
+import { CornersModule } from './modules/corners/corners.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ShareHouseModule } from './modules/shareHouse/shareHouse.module';
     WriterModule,
     SubcategoryModule,
     ShareHouseModule,
+    CornersModule,
   ],
   controllers: [BooksController],
   providers: [BookFactory, BookRepository, BooksService],
@@ -30,6 +32,7 @@ import { ShareHouseModule } from './modules/shareHouse/shareHouse.module';
     WriterModule,
     SubcategoryModule,
     ShareHouseModule,
+    CornersModule,
   ],
 })
 export class BooksModule {}

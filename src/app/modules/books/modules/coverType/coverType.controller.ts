@@ -13,6 +13,7 @@ import { NewCoverTypeDto, UpdateCoverTypeDto } from './dto';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { CoverTypeEntity } from './infrastructure/entity';
+import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 
 @Controller('cover_types')
 export class CoverTypeController {
@@ -21,6 +22,7 @@ export class CoverTypeController {
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  @IsPublic()
   @Get()
   async findMany(): Promise<CoverTypeEntity[]> {
     return this.CoverTypeService.findMany();

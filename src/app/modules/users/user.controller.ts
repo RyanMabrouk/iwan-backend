@@ -12,7 +12,7 @@ import { UpdateUserDto } from './dto/update.dto';
 import { QueryUserDto } from './dto/query.dto';
 import { UsersService } from './user.service';
 import { ITransaction } from '../../database/types/transaction';
-import { AuthenticatedUser } from 'src/app/auth/AuthUser';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { UserEntity } from './infrastructure/entity/entity';

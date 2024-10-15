@@ -13,6 +13,7 @@ import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { ShareHouseEntity } from './infrastructure/entity';
 import { ShareHouseService } from './shareHouse.service';
+import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 
 @Controller('share_houses')
 export class ShareHouseController {
@@ -21,6 +22,7 @@ export class ShareHouseController {
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  @IsPublic()
   @Get()
   async findMany(): Promise<ShareHouseEntity[]> {
     return this.WriterService.findMany();

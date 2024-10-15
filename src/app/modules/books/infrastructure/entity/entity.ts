@@ -15,13 +15,14 @@ import { ShareHouseEntity } from '../../modules/shareHouse/infrastructure/entity
 export interface KyselyBookEntity {
   id: GeneratedAlways<string>;
   title: string;
-  writer_id: string | null;
+  writer_id: string | null; // foreign key
+  release_year: number | null; // foreign key
+  cover_type_id: string | null; // foreign
+  corner_id: string | null; // foreign key
   share_house_id: string;
   editor: string;
-  release_year: number | null;
   description: string;
   status: BookStatusEnum;
-  cover_type_id: string | null;
   weight: number;
   page_count: number;
   isbn: string;
@@ -39,6 +40,7 @@ export interface KyselyBookEntity {
   slug: string;
   meta_keywords: string[];
   structured_data: string;
+  number_of_volumes: number;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;
 }

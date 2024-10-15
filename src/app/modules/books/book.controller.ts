@@ -18,6 +18,7 @@ import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { BookEntity, IBookPopulated } from './infrastructure/entity/entity';
 import { CreateBookDto } from './dto/create.dto';
+import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 
 @Controller({
   path: 'books',
@@ -28,6 +29,7 @@ export class BooksController {
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  @IsPublic()
   @Get()
   async getMany(
     @Query() query: QueryBookDto,
@@ -35,6 +37,7 @@ export class BooksController {
     return this.service.findManyWithPagination(query);
   }
 
+  @IsPublic()
   @Get(':id')
   async get(@Param('id', ParseUUIDPipe) id: string): Promise<IBookPopulated> {
     return this.service.findOne({ id });

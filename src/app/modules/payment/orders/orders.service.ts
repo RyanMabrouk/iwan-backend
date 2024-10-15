@@ -114,7 +114,15 @@ export class OrdersService {
     return updatedEntity;
   }
 
-  async updateOne(id: string, payload: UpdateOrderDto): Promise<OrderEntity> {
+  async updateOne(
+    id: string,
+    payload: UpdateOrderDto,
+    user_id: string,
+  ): Promise<OrderEntity> {
+    const order_before_update = await this.findOne({ id });
+    if (order_before_update.user_id !== user_id) {
+      throw new NotFoundException(ERRORS('This order does not belong to you'));
+    }
     const order = await this.repository.updateOne({ id, payload });
     if (order === null) {
       throw new NotFoundException(ERRORS('Order not found'));

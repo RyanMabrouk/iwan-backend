@@ -147,4 +147,13 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   @IsString({ each: true, message: TranslateDto('IsString') })
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   meta_keywords!: string[];
+
+  @IsOptional()
+  @IsNumber({}, { message: TranslateDto('IsNumber') })
+  @Min(0, { message: TranslateDto('Min') })
+  number_of_volumes!: number;
+
+  @IsOptional()
+  @IsUrl({}, { message: TranslateDto('IsUrl') })
+  corner_id!: string;
 }

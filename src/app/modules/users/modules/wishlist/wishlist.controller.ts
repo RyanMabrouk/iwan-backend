@@ -14,7 +14,7 @@ import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { WishlistEntity } from './infrastructure/entity';
 import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
-import { AuthenticatedUser } from 'src/app/auth/AuthUser';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
 import { QueryBookDto } from 'src/app/modules/books/dto/query.dto';
 import { BookEntity } from 'src/app/modules/books/infrastructure/entity/entity';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
