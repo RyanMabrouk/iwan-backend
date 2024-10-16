@@ -19,5 +19,8 @@
   "Order already canceled": "Order already canceled",
   "Order already confirmed": "Order already confirmed",
   "Not enough stock": "Not enough stock",
-  "This order does not belong to you": "This order does not belong to you"
+  "This order does not belong to you": "This order does not belong to you",
+  "Failed to remove book from event": "Failed to remove book from event",
+  "Failed to add book to event": "Failed to add book to event",
+  "Event not found": "Event not found"
 }

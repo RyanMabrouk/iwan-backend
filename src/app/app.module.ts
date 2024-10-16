@@ -18,6 +18,7 @@ import { UsersModule } from './modules/users/user.module';
 import { BooksModule } from './modules/books/book.module';
 import { OrdersModule } from './modules/payment/orders/orders.module';
 import { BannersModule } from './modules/banners/banner.module';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { BannersModule } from './modules/banners/banner.module';
     BooksModule,
     OrdersModule,
     BannersModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

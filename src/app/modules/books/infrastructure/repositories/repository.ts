@@ -71,6 +71,12 @@ export class BookRepository
               .whereRef(`share_houses.id`, '=', `books.share_house_id`)
               .selectAll(),
           ).as('share_house'),
+          jsonObjectFrom(
+            q
+              .selectFrom('corners')
+              .whereRef(`corners.id`, '=', `books.corner_id`)
+              .selectAll(),
+          ).as('corner'),
         ])
         .executeTakeFirst();
       return res ?? null;
@@ -160,6 +166,12 @@ export class BookRepository
                 .whereRef(`share_houses.id`, '=', `books.share_house_id`)
                 .selectAll(),
             ).as('share_house'),
+            jsonObjectFrom(
+              q
+                .selectFrom('corners')
+                .whereRef(`corners.id`, '=', `books.corner_id`)
+                .selectAll(),
+            ).as('corner'),
           ])
           .execute(),
         queryBuilder

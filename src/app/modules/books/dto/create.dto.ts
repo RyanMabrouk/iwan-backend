@@ -154,6 +154,6 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   number_of_volumes!: number;
 
   @IsOptional()
-  @IsUUID(4, { message: TranslateDto('IsUrl') })
+  @IsUUID(4, { message: TranslateDto('IsUUID') })
   corner_id!: string;
 }

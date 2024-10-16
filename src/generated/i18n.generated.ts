@@ -27,6 +27,9 @@ export type I18nTranslations = {
         "Order already confirmed": string;
         "Not enough stock": string;
         "This order does not belong to you": string;
+        "Failed to remove book from event": string;
+        "Failed to add book to event": string;
+        "Event not found": string;
     };
     "properties": {
         "title": string;

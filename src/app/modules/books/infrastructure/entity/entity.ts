@@ -11,6 +11,7 @@ import { SubcategoryEntity } from '../../modules/subcategory/infrastructure/enti
 import { CoverTypeEntity } from '../../modules/coverType/infrastructure/entity';
 import { WriterEntity } from '../../modules/writer/infrastructure/entity';
 import { ShareHouseEntity } from '../../modules/shareHouse/infrastructure/entity';
+import { CornerEntity } from '../../modules/corners/infrastructure/entity';
 
 export interface KyselyBookEntity {
   id: GeneratedAlways<string>;
@@ -52,6 +53,7 @@ export interface IBookPopulated extends BookEntity {
   cover_type: CoverTypeEntity | null;
   writer: WriterEntity | null;
   share_house: ShareHouseEntity | null;
+  corner: CornerEntity | null;
 }
 export type NewBook = Insertable<KyselyBookEntity>;
 export type UpdateBook = Updateable<KyselyBookEntity>;
