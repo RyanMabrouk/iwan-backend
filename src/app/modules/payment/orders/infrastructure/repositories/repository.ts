@@ -36,6 +36,7 @@ export class OrderRepository
             q
               .selectFrom('orders_products')
               .whereRef(`orders_products.order_id`, '=', `orders.id`)
+              .innerJoin('books', 'orders_products.book_id', 'books.id')
               .selectAll(),
           ).as('products'),
         ])
@@ -91,6 +92,7 @@ export class OrderRepository
               q
                 .selectFrom('orders_products')
                 .whereRef(`orders_products.order_id`, '=', `orders.id`)
+                .innerJoin('books', 'orders_products.book_id', 'books.id')
                 .selectAll(),
             ).as('products'),
           ])
