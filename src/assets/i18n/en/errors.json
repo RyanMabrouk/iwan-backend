@@ -22,5 +22,6 @@
   "This order does not belong to you": "This order does not belong to you",
   "Failed to remove book from event": "Failed to remove book from event",
   "Failed to add book to event": "Failed to add book to event",
-  "Event not found": "Event not found"
+  "Event not found": "Event not found",
+  "Banner not found!": "Banner not found!"
 }

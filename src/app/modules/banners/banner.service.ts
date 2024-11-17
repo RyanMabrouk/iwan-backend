@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { NewBannerDto, UpdateBannerDto } from './dto';
 import { BannerRepository } from './infrastructure/repository';
 import { BannerEntity } from './infrastructure/entity';
@@ -10,6 +14,14 @@ export class BannersService {
 
   async findMany(): Promise<BannerEntity[]> {
     return await this.repository.findMany();
+  }
+
+  async findOne(id: string): Promise<BannerEntity> {
+    const res = await this.repository.findOne({ id });
+    if (res === null) {
+      throw new NotFoundException(ERRORS('Banner not found!'));
+    }
+    return res;
   }
 
   async createOne(payload: NewBannerDto): Promise<BannerEntity> {

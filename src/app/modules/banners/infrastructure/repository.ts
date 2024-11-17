@@ -17,6 +17,19 @@ export class BannerRepository
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  async findOne({ id }: { id: string }): Promise<BannerEntity | null> {
+    try {
+      const res = await this.trx
+        .selectFrom('banners')
+        .where('id', '=', id)
+        .selectAll()
+        .executeTakeFirst();
+      return res ?? null;
+    } catch (err) {
+      throw new PostgresError(err);
+    }
+  }
+
   async findMany(): Promise<BannerEntity[]> {
     try {
       const res = await this.trx.selectFrom('banners').selectAll().execute();

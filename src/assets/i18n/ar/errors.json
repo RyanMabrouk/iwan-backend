@@ -22,5 +22,6 @@
   "This order does not belong to you": "هذا الطلب لا ينتمي إليك",
   "Failed to remove book from event": "فشل في إزالة الكتاب من الحدث",
   "Failed to add book to event": "فشل في إضافة الكتاب إلى الحدث",
-  "Event not found": "الحدث غير موجود"
+  "Event not found": "الحدث غير موجود",
+  "Banner not found!": "البانر غير موجود!"
 }
