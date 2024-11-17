@@ -78,10 +78,10 @@ export class CreateBookDto implements Omit<NewBook, 'price_after_discount'> {
   price!: number;
 
   @IsOptional()
-  @ValidateIf((o) => Number(o.price_dhs) !== 0)
+  @ValidateIf((o) => Number(o.price_dollar) !== 0)
   @IsNumber({}, { message: TranslateDto('IsNumber') })
   @IsPositive({ message: TranslateDto('IsPositive') })
-  price_dhs!: number;
+  price_dollar!: number;
 
   @IsOptional()
   @ValidateIf((o) => Number(o.discount) !== 0)

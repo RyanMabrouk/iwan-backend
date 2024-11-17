@@ -29,7 +29,7 @@ export interface KyselyBookEntity {
   isbn: string;
   price: number;
   price_after_discount: number;
-  price_dhs: number;
+  price_dollar: number;
   discount: number;
   discount_type: DiscountTypeEnum;
   images_urls: string[];
