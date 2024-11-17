@@ -45,7 +45,19 @@ export class EventRepository
 
   async findMany(): Promise<EventEntity[]> {
     try {
-      const res = await this.trx.selectFrom('events').selectAll().execute();
+      const res = await this.trx
+        .selectFrom('events')
+        .selectAll()
+        .select((q) => [
+          jsonArrayFrom(
+            q
+              .selectFrom('event_books')
+              .whereRef(`event_books.event_id`, '=', `events.id`)
+              .innerJoin('books', 'books.id', 'event_books.book_id')
+              .selectAll('books'),
+          ).as('books'),
+        ])
+        .execute();
       return res;
     } catch (err) {
       throw new PostgresError(err);

@@ -69,8 +69,8 @@ export class EventsController {
 
   @Post(':event_id/books/:book_id')
   async addCategoryToEvent(
-    @Param('event_id') event_id: string,
-    @Param('book_id') book_id: string,
+    @Param('event_id', ParseUUIDPipe) event_id: string,
+    @Param('book_id', ParseUUIDPipe) book_id: string,
   ) {
     const res = await this.service.addBooksToEvent([{ book_id, event_id }]);
     this.trx.commit();
@@ -79,8 +79,8 @@ export class EventsController {
 
   @Delete(':event_id/books/:book_id')
   async removeCategoryFromEvent(
-    @Param('event_id') event_id: string,
-    @Param('book_id') book_id: string,
+    @Param('event_id', ParseUUIDPipe) event_id: string,
+    @Param('book_id', ParseUUIDPipe) book_id: string,
   ) {
     const res = await this.service.removeCategoryFromEvent({
       event_id,
