@@ -33,6 +33,19 @@ export class EventRepository
               .selectFrom('event_books')
               .whereRef(`event_books.event_id`, '=', `events.id`)
               .innerJoin('books', 'books.id', 'event_books.book_id')
+              .select((q) => [
+                jsonArrayFrom(
+                  q
+                    .selectFrom('book_categories')
+                    .where(`book_categories.book_id`, '=', id)
+                    .innerJoin(
+                      'categories',
+                      'categories.id',
+                      'book_categories.category_id',
+                    )
+                    .selectAll('categories'),
+                ).as('categories'),
+              ])
               .selectAll('books'),
           ).as('books'),
         ])
@@ -54,7 +67,20 @@ export class EventRepository
               .selectFrom('event_books')
               .whereRef(`event_books.event_id`, '=', `events.id`)
               .innerJoin('books', 'books.id', 'event_books.book_id')
-              .selectAll('books'),
+              .selectAll('books')
+              .select((q) => [
+                jsonArrayFrom(
+                  q
+                    .selectFrom('book_categories')
+                    .whereRef(`book_categories.book_id`, '=', 'books.id')
+                    .innerJoin(
+                      'categories',
+                      'categories.id',
+                      'book_categories.category_id',
+                    )
+                    .selectAll('categories'),
+                ).as('categories'),
+              ]),
           ).as('books'),
         ])
         .execute();
