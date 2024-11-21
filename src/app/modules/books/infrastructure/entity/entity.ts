@@ -55,6 +55,24 @@ export interface IBookPopulated extends BookEntity {
   share_house: ShareHouseEntity | null;
   corner: CornerEntity | null;
 }
+export type BookSummary = Pick<
+  BookEntity,
+  | 'id'
+  | 'title'
+  | 'slug'
+  | 'images_urls'
+  | 'price'
+  | 'price_after_discount'
+  | 'discount'
+  | 'discount_type'
+  | 'price_dollar'
+>;
+
+export interface IBookDetails extends IBookPopulated {
+  writer_books: BookSummary[];
+  recommended_books: BookSummary[];
+}
+
 export type NewBook = Insertable<KyselyBookEntity>;
 export type UpdateBook = Updateable<KyselyBookEntity>;
 export type IQueryBookKeys = `books.${keyof KyselyBookEntity}`;

@@ -7,6 +7,7 @@ import {
   KyselyBookEntity,
   NewBook,
   IBookPopulated,
+  IBookDetails,
 } from '../entity/entity';
 import { GenericRepository } from 'src/app/shared/types/GenericRepository';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
@@ -24,28 +25,79 @@ export class BookRepository
   constructor(
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
-  async findOne({ id }: { id: string }): Promise<IBookPopulated | null> {
+  async findOne({ id }: { id: string }): Promise<IBookDetails | null> {
     try {
       const res = await this.trx
-        .selectFrom('books')
-        .where('id', '=', id)
-        .selectAll()
+        .with('this_book', (q) =>
+          q.selectFrom('books').where('id', '=', id).selectAll('books'),
+        )
+        .with('this_book_categories', (q) =>
+          q
+            .selectFrom('book_categories')
+            .where(`book_categories.book_id`, '=', id)
+            .innerJoin(
+              'categories',
+              'categories.id',
+              'book_categories.category_id',
+            )
+            .selectAll('categories'),
+        )
+        .selectFrom('this_book')
+        .selectAll('this_book')
         .select((q) => [
           jsonArrayFrom(
             q
-              .selectFrom('book_categories')
-              .whereRef(`book_categories.book_id`, '=', `books.id`)
+              .selectFrom('books')
+              .whereRef(`books.writer_id`, '=', `this_book.writer_id`)
+              .where(`books.writer_id`, 'is not', null)
+              .limit(8)
+              .select([
+                'books.id',
+                'books.title',
+                'books.slug',
+                'books.images_urls',
+                'books.price',
+                'books.price_after_discount',
+                'books.discount',
+                'books.discount_type',
+                'books.price_dollar',
+              ]),
+          ).as('writer_books'),
+          jsonArrayFrom(
+            q
+              .selectFrom('books')
               .innerJoin(
-                'categories',
-                'categories.id',
+                'book_categories',
+                'book_categories.book_id',
+                'books.id',
+              )
+              .innerJoin(
+                'this_book_categories',
+                'this_book_categories.id',
                 'book_categories.category_id',
               )
-              .selectAll('categories'),
+              .limit(8)
+              .select([
+                'books.id',
+                'books.title',
+                'books.slug',
+                'books.images_urls',
+                'books.price',
+                'books.price_after_discount',
+                'books.discount',
+                'books.discount_type',
+                'books.price_dollar',
+              ]),
+          ).as('recommended_books'),
+          jsonArrayFrom(
+            q
+              .selectFrom('this_book_categories')
+              .selectAll('this_book_categories'),
           ).as('categories'),
           jsonArrayFrom(
             q
               .selectFrom('book_subcategories')
-              .whereRef(`book_subcategories.book_id`, '=', `books.id`)
+              .where(`book_subcategories.book_id`, '=', id)
               .innerJoin(
                 'subcategories',
                 'subcategories.id',
@@ -56,25 +108,25 @@ export class BookRepository
           jsonObjectFrom(
             q
               .selectFrom('cover_types')
-              .whereRef(`cover_types.id`, '=', `books.cover_type_id`)
+              .whereRef(`cover_types.id`, '=', `this_book.cover_type_id`)
               .selectAll(),
           ).as('cover_type'),
           jsonObjectFrom(
             q
               .selectFrom('writers')
-              .whereRef(`writers.id`, '=', `books.writer_id`)
+              .whereRef(`writers.id`, '=', `this_book.writer_id`)
               .selectAll(),
           ).as('writer'),
           jsonObjectFrom(
             q
               .selectFrom('share_houses')
-              .whereRef(`share_houses.id`, '=', `books.share_house_id`)
+              .whereRef(`share_houses.id`, '=', `this_book.share_house_id`)
               .selectAll(),
           ).as('share_house'),
           jsonObjectFrom(
             q
               .selectFrom('corners')
-              .whereRef(`corners.id`, '=', `books.corner_id`)
+              .whereRef(`corners.id`, '=', `this_book.corner_id`)
               .selectAll(),
           ).as('corner'),
         ])
