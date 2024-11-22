@@ -19,8 +19,12 @@ export async function up(db: Kysely<unknown>) {
   await db
     .withSchema('public')
     .schema.createTable('event_books')
-    .addColumn('event_id', 'uuid', (col) => col.references('events.id'))
-    .addColumn('book_id', 'uuid', (col) => col.references('books.id'))
+    .addColumn('event_id', 'uuid', (col) =>
+      col.references('events.id').onDelete('cascade'),
+    )
+    .addColumn('book_id', 'uuid', (col) =>
+      col.references('books.id').onDelete('cascade'),
+    )
     .execute();
 }
 
