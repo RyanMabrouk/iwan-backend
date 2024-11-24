@@ -29,6 +29,7 @@ export class UserRepository
     try {
       const res = await this.trx
         .selectFrom('users')
+        .innerJoin('orders', 'orders.user_id', 'users.user_id')
         .where('user_id', '=', user_id)
         .selectAll()
         .select((q) => [
@@ -38,7 +39,7 @@ export class UserRepository
               .whereRef(`addresses.user_id`, '=', `users.user_id`)
               .selectAll(),
           ).as('addresses'),
-          this.trx.fn
+          q.fn
             .sum('orders.total_price')
             .filterWhere('orders.user_id', '=', user_id)
             .as('total_spent'),
@@ -60,6 +61,7 @@ export class UserRepository
     try {
       const queryBuilder = this.trx
         .selectFrom('users')
+        .innerJoin('orders', 'orders.user_id', 'users.user_id')
         .$if(!!query.filters, (q) =>
           q.where((e) =>
             e.and(
@@ -101,14 +103,14 @@ export class UserRepository
                 .whereRef(`addresses.user_id`, '=', `users.user_id`)
                 .selectAll(),
             ).as('addresses'),
-            this.trx.fn
+            q.fn
               .sum('orders.total_price')
               .filterWhereRef('orders.user_id', '=', 'users.user_id')
               .as('total_spent'),
           ])
           .execute(),
         queryBuilder
-          .select(this.trx.fn.countAll().as('count'))
+          .select(this.trx.fn.countAll('users').as('count'))
           .executeTakeFirst(),
       ]);
       return infinityPagination(
