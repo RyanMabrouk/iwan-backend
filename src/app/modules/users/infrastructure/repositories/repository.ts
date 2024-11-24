@@ -36,7 +36,7 @@ export class UserRepository
           jsonArrayFrom(
             q
               .selectFrom('addresses')
-              .whereRef(`addresses.user_id`, '=', `users.user_id`)
+              .where(`addresses.user_id`, '=', user_id)
               .selectAll(),
           ).as('addresses'),
           q.fn
