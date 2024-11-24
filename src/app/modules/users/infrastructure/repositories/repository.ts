@@ -13,7 +13,7 @@ import { ITransaction } from 'src/app/database/types/transaction';
 import { PostgresError } from 'src/app/shared/Errors/PostgresError';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
-import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 
 export class UserRepository
   implements GenericRepository<KyselyUserEntity, UpdateUserDto, QueryUserDto>
@@ -32,12 +32,6 @@ export class UserRepository
         .where('users.user_id', '=', user_id)
         .selectAll()
         .select((q) => [
-          jsonArrayFrom(
-            q
-              .selectFrom('addresses')
-              .where(`addresses.user_id`, '=', user_id)
-              .selectAll(),
-          ).as('addresses'),
           jsonObjectFrom(
             q
               .selectFrom('orders')
@@ -98,12 +92,6 @@ export class UserRepository
           )
           .selectAll()
           .select((q) => [
-            jsonArrayFrom(
-              q
-                .selectFrom('addresses')
-                .whereRef(`addresses.user_id`, '=', `users.user_id`)
-                .selectAll(),
-            ).as('addresses'),
             jsonObjectFrom(
               q
                 .selectFrom('orders')

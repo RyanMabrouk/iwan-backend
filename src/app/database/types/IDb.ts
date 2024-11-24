@@ -13,7 +13,6 @@ import { KyselyEventBooksEntity } from 'src/app/modules/events/infrastructure/en
 import { KyselyOrderEntity } from 'src/app/modules/payment/orders/infrastructure/entity/entity';
 import { KyselyOrderProductEntity } from 'src/app/modules/payment/orders/modules/order_products/infrastructure/entity';
 import { KyselyUserEntity } from 'src/app/modules/users/infrastructure/entity/entity';
-import { KyselyAddressEntity } from 'src/app/modules/users/modules/addresses/infrastructure/entity';
 import { KyselyWishlistEntity } from 'src/app/modules/users/modules/wishlist/infrastructure/entity';
 
 export interface IDb {
@@ -26,7 +25,6 @@ export interface IDb {
   book_categories: KyselyBookCategoryEntity;
   book_subcategories: KyselyBookSubcategoryEntity;
   share_houses: KyselyShareHouseEntity;
-  addresses: KyselyAddressEntity;
   orders: KyselyOrderEntity;
   orders_products: KyselyOrderProductEntity;
   wishlists: KyselyWishlistEntity;

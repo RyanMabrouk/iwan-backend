@@ -6,7 +6,6 @@ import {
   Updateable,
 } from 'kysely';
 import { RolesEnum } from 'src/types/other/enums.types';
-import { AddressEntity } from '../../modules/addresses/infrastructure/entity';
 
 export interface KyselyUserEntity {
   user_id: ColumnType<string, string, never>;
@@ -15,13 +14,18 @@ export interface KyselyUserEntity {
   phone_number: string;
   first_name: string;
   last_name: string;
+  street: string;
+  street2: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;
 }
 
 export type UserEntity = Selectable<KyselyUserEntity>;
 export interface UserPopulated extends UserEntity {
-  addresses: AddressEntity[];
   total_spent: number;
 }
 export type NewUser = Insertable<KyselyUserEntity>;

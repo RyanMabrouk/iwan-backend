@@ -4,19 +4,12 @@ import { UserRepository } from './infrastructure/repositories/repository';
 import { UserFactory } from './factory/factory';
 import { DatabaseModule } from '../../database/database.module';
 import { UsersService } from './user.service';
-import { AddressModule } from './modules/addresses/addresses.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 
 @Module({
-  imports: [DatabaseModule, AddressModule, WishlistModule],
+  imports: [DatabaseModule, WishlistModule],
   controllers: [UsersController],
   providers: [UserFactory, UserRepository, UsersService],
-  exports: [
-    UserFactory,
-    UserRepository,
-    UsersService,
-    AddressModule,
-    WishlistModule,
-  ],
+  exports: [UserFactory, UserRepository, UsersService, WishlistModule],
 })
 export class UsersModule {}

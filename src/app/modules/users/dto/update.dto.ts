@@ -37,4 +37,34 @@ export class UpdateUserDto implements UpdateUser {
   @IsString({ message: TranslateDto('IsString') })
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   phone_number?: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  city!: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  state!: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  postal_code!: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  country!: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  street!: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  street2!: string;
 }

@@ -17,6 +17,7 @@ import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPagin
 import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 import { PaymentStatusEnum } from 'src/types/other/enums.types';
+import { Book } from 'src/app/modules/books/domain/domain';
 
 export class OrderRepository
   implements
@@ -37,11 +38,23 @@ export class OrderRepository
               .selectFrom('orders_products')
               .whereRef(`orders_products.order_id`, '=', `orders.id`)
               .innerJoin('books', 'orders_products.book_id', 'books.id')
-              .selectAll(),
+              .selectAll(['orders_products'])
+              .select(['books.images_urls', 'books.title', 'books.id as id']),
           ).as('products'),
         ])
         .executeTakeFirst();
-      return res ?? null;
+      if (!res) return null;
+      return {
+        ...res,
+        products: res.products.map((product) => ({
+          ...product,
+          price_after_discount: Book.calculatePriceAfterDiscount({
+            price: product.price_before_discount,
+            discount: product.discount,
+            discount_type: product.discount_type,
+          }),
+        })),
+      };
     } catch (err) {
       throw new PostgresError(err);
     }
@@ -93,7 +106,8 @@ export class OrderRepository
                 .selectFrom('orders_products')
                 .whereRef(`orders_products.order_id`, '=', `orders.id`)
                 .innerJoin('books', 'orders_products.book_id', 'books.id')
-                .selectAll(),
+                .selectAll(['orders_products'])
+                .select(['books.images_urls', 'books.title', 'books.id as id']),
             ).as('products'),
           ])
           .execute(),
@@ -101,11 +115,24 @@ export class OrderRepository
           .select(this.trx.fn.countAll().as('count'))
           .executeTakeFirst(),
       ]);
-      return infinityPagination(res, {
-        total_count: Number(total?.count ?? 0),
-        page: query.page,
-        limit: query.limit,
-      });
+      return infinityPagination(
+        res.map((order) => ({
+          ...order,
+          products: order.products.map((product) => ({
+            ...product,
+            price_after_discount: Book.calculatePriceAfterDiscount({
+              price: product.price_before_discount,
+              discount: product.discount,
+              discount_type: product.discount_type,
+            }),
+          })),
+        })),
+        {
+          total_count: Number(total?.count ?? 0),
+          page: query.page,
+          limit: query.limit,
+        },
+      );
     } catch (err) {
       throw new PostgresError(err);
     }
