@@ -166,7 +166,19 @@ export class BookRepository
               ),
             ),
           ),
+        )
+        .$if(!!query.most_sold, (q) =>
+          q
+            .innerJoin('orders_products', 'orders_products.book_id', 'books.id')
+            .groupBy(['books.id', 'orders_products.id'])
+            .orderBy(
+              this.trx.fn
+                .sum('orders_products.quantity')
+                .filterWhereRef('orders_products.book_id', '=', 'books.id'),
+              query.most_sold,
+            ),
         );
+
       const [res, total] = await Promise.all([
         queryBuilder
           .$if(!!query.sort, (q) =>
@@ -176,7 +188,7 @@ export class BookRepository
           .$if(!!query.limit && !!query.page, (q) =>
             q.offset((query.page - 1) * query.limit),
           )
-          .selectAll()
+          .selectAll('books')
           .select((q) => [
             jsonArrayFrom(
               q
