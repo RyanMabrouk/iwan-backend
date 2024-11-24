@@ -32,4 +32,9 @@ export class UpdateUserDto implements UpdateUser {
   @IsString({ message: TranslateDto('IsString') })
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   last_name?: string;
+
+  @IsOptional()
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  phone_number?: string;
 }

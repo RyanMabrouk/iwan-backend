@@ -12,6 +12,7 @@ export interface KyselyUserEntity {
   user_id: ColumnType<string, string, never>;
   roles: RolesEnum[];
   avatar: string;
+  phone_number: string;
   first_name: string;
   last_name: string;
   created_at: GeneratedAlways<Date>;
