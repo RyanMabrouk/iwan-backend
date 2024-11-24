@@ -30,7 +30,7 @@ export class UserRepository
       const res = await this.trx
         .selectFrom('users')
         .innerJoin('orders', 'orders.user_id', 'users.user_id')
-        .where('user_id', '=', user_id)
+        .where('users.user_id', '=', user_id)
         .selectAll()
         .select((q) => [
           jsonArrayFrom(
