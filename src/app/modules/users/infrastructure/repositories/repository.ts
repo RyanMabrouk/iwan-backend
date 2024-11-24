@@ -13,7 +13,7 @@ import { ITransaction } from 'src/app/database/types/transaction';
 import { PostgresError } from 'src/app/shared/Errors/PostgresError';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
-import { jsonArrayFrom } from 'kysely/helpers/postgres';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 
 export class UserRepository
   implements GenericRepository<KyselyUserEntity, UpdateUserDto, QueryUserDto>
@@ -28,8 +28,7 @@ export class UserRepository
   }): Promise<UserPopulated | null> {
     try {
       const res = await this.trx
-        .selectFrom('users')
-        .innerJoin('orders', 'orders.user_id', 'users.user_id')
+        .selectFrom(['users'])
         .where('users.user_id', '=', user_id)
         .selectAll()
         .select((q) => [
@@ -39,16 +38,19 @@ export class UserRepository
               .where(`addresses.user_id`, '=', user_id)
               .selectAll(),
           ).as('addresses'),
-          q.fn
-            .sum('orders.total_price')
-            .filterWhere('orders.user_id', '=', user_id)
-            .as('total_spent'),
+          jsonObjectFrom(
+            q
+              .selectFrom('orders')
+              .where(`orders.user_id`, '=', user_id)
+              .select(this.trx.fn.sum('orders.total_price').as('total_spent')),
+          ).as('user_orders'),
         ])
         .executeTakeFirst();
       if (!res) return null;
+      const total_spent = Number(res.user_orders?.total_spent ?? 0);
       return {
         ...res,
-        total_spent: Number(res.total_spent ?? 0),
+        total_spent,
       };
     } catch (err) {
       throw new PostgresError(err);
@@ -61,7 +63,6 @@ export class UserRepository
     try {
       const queryBuilder = this.trx
         .selectFrom('users')
-        .innerJoin('orders', 'orders.user_id', 'users.user_id')
         .$if(!!query.filters, (q) =>
           q.where((e) =>
             e.and(
@@ -103,10 +104,14 @@ export class UserRepository
                 .whereRef(`addresses.user_id`, '=', `users.user_id`)
                 .selectAll(),
             ).as('addresses'),
-            q.fn
-              .sum('orders.total_price')
-              .filterWhereRef('orders.user_id', '=', 'users.user_id')
-              .as('total_spent'),
+            jsonObjectFrom(
+              q
+                .selectFrom('orders')
+                .whereRef(`orders.user_id`, '=', 'users.user_id')
+                .select(
+                  this.trx.fn.sum('orders.total_price').as('total_spent'),
+                ),
+            ).as('user_orders'),
           ])
           .execute(),
         queryBuilder
@@ -116,7 +121,7 @@ export class UserRepository
       return infinityPagination(
         res.map((user) => ({
           ...user,
-          total_spent: Number(user.total_spent ?? 0),
+          total_spent: Number(user.user_orders?.total_spent ?? 0),
         })),
         {
           total_count: Number(total?.count ?? 0),
