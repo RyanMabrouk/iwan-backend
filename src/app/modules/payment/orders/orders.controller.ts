@@ -34,12 +34,30 @@ export class OrdersController {
   async getMany(
     @Query() query: QueryOrderDto,
   ): Promise<InfinityPaginationResultType<OrderEntity>> {
-    return this.service.findManyWithPagination(query);
+    return await this.service.findManyWithPagination(query);
+  }
+
+  @Get('me')
+  async getUserOrders(
+    @Query() query: QueryOrderDto,
+    @AuthenticatedUser() userJwt: ITokenPayload,
+  ): Promise<InfinityPaginationResultType<OrderEntity>> {
+    return await this.service.findManyWithPagination({
+      ...query,
+      filters: {
+        'orders.user_id': [
+          {
+            operator: '=',
+            value: userJwt.sub,
+          },
+        ],
+      },
+    });
   }
 
   @Get(':id')
   async get(@Param('id', ParseUUIDPipe) id: string): Promise<OrderEntity> {
-    return this.service.findOne({ id });
+    return await this.service.findOne({ id });
   }
 
   @Post()

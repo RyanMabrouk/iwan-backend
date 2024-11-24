@@ -38,9 +38,17 @@ export class UserRepository
               .whereRef(`addresses.user_id`, '=', `users.user_id`)
               .selectAll(),
           ).as('addresses'),
+          this.trx.fn
+            .sum('orders.total_price')
+            .filterWhere('orders.user_id', '=', user_id)
+            .as('total_spent'),
         ])
         .executeTakeFirst();
-      return res ?? null;
+      if (!res) return null;
+      return {
+        ...res,
+        total_spent: Number(res.total_spent ?? 0),
+      };
     } catch (err) {
       throw new PostgresError(err);
     }
@@ -93,17 +101,27 @@ export class UserRepository
                 .whereRef(`addresses.user_id`, '=', `users.user_id`)
                 .selectAll(),
             ).as('addresses'),
+            this.trx.fn
+              .sum('orders.total_price')
+              .filterWhereRef('orders.user_id', '=', 'users.user_id')
+              .as('total_spent'),
           ])
           .execute(),
         queryBuilder
           .select(this.trx.fn.countAll().as('count'))
           .executeTakeFirst(),
       ]);
-      return infinityPagination(res, {
-        total_count: Number(total?.count ?? 0),
-        page: query.page,
-        limit: query.limit,
-      });
+      return infinityPagination(
+        res.map((user) => ({
+          ...user,
+          total_spent: Number(user.total_spent ?? 0),
+        })),
+        {
+          total_count: Number(total?.count ?? 0),
+          page: query.page,
+          limit: query.limit,
+        },
+      );
     } catch (err) {
       throw new PostgresError(err);
     }

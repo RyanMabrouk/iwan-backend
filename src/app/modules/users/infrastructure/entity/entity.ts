@@ -21,6 +21,7 @@ export interface KyselyUserEntity {
 export type UserEntity = Selectable<KyselyUserEntity>;
 export interface UserPopulated extends UserEntity {
   addresses: AddressEntity[];
+  total_spent: number;
 }
 export type NewUser = Insertable<KyselyUserEntity>;
 export type UpdateUser = Updateable<KyselyUserEntity>;
