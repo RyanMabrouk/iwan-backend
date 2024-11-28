@@ -48,13 +48,15 @@ export class BookRepository {
         .selectFrom('this_book')
         .selectAll('this_book')
         .select((q) => [
-          jsonObjectFrom(
-            q
-              .selectFrom('wishlists')
-              .where('wishlists.user_id', '=', user_id ?? '')
-              .where('wishlists.book_id', '=', id)
-              .select(this.trx.fn.countAll().as('is_in_wishlist')),
-          ).as('wishlist'),
+          user_id
+            ? jsonObjectFrom(
+                q
+                  .selectFrom('wishlists')
+                  .where('wishlists.user_id', '=', user_id ?? '')
+                  .where('wishlists.book_id', '=', id)
+                  .select(this.trx.fn.countAll().as('is_in_wishlist')),
+              ).as('wishlist')
+            : 'this_book.id',
           jsonArrayFrom(
             q
               .selectFrom('books')
@@ -227,13 +229,15 @@ export class BookRepository {
           )
           .selectAll('books')
           .select((q) => [
-            jsonObjectFrom(
-              q
-                .selectFrom('wishlists')
-                .where('wishlists.user_id', '=', user_id ?? '')
-                .whereRef('wishlists.book_id', '=', 'books.id')
-                .select(this.trx.fn.countAll().as('is_in_wishlist')),
-            ).as('wishlist'),
+            user_id
+              ? jsonObjectFrom(
+                  q
+                    .selectFrom('wishlists')
+                    .where('wishlists.user_id', '=', user_id ?? '')
+                    .whereRef('wishlists.book_id', '=', 'books.id')
+                    .select(this.trx.fn.countAll().as('is_in_wishlist')),
+                ).as('wishlist')
+              : 'books.id',
             jsonArrayFrom(
               q
                 .selectFrom('book_categories')
