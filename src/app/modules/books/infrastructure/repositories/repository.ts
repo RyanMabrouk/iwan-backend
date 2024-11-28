@@ -177,6 +177,28 @@ export class BookRepository
                 .filterWhereRef('orders_products.book_id', '=', 'books.id'),
               query.most_sold,
             ),
+        )
+        .$if(!!query.categories_ids, (q) =>
+          q
+            .innerJoin('book_categories', 'book_categories.book_id', 'books.id')
+            .where(
+              'book_categories.category_id',
+              'in',
+              query.categories_ids as string[],
+            ),
+        )
+        .$if(!!query.subcategories_ids, (q) =>
+          q
+            .innerJoin(
+              'book_subcategories',
+              'book_subcategories.book_id',
+              'books.id',
+            )
+            .where(
+              'book_subcategories.subcategory_id',
+              'in',
+              query.subcategories_ids as string[],
+            ),
         );
 
       const [res, total] = await Promise.all([
