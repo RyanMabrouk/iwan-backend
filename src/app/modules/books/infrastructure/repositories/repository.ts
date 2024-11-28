@@ -4,12 +4,10 @@ import { QueryBookDto } from '../../dto/query.dto';
 import {
   BookEntity,
   IQueryBookKeys,
-  KyselyBookEntity,
   NewBook,
   IBookPopulated,
   IBookDetails,
 } from '../entity/entity';
-import { GenericRepository } from 'src/app/shared/types/GenericRepository';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { PostgresError } from 'src/app/shared/Errors/PostgresError';
@@ -18,14 +16,19 @@ import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { NewBookCategory } from '../entity/bookCategories';
 import { NewBookSubcategory } from '../entity/bookSubcategories';
+import { omit } from 'src/app/shared/utils/omit';
 
-export class BookRepository
-  implements GenericRepository<KyselyBookEntity, UpdateBookDto, QueryBookDto>
-{
+export class BookRepository {
   constructor(
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
-  async findOne({ id }: { id: string }): Promise<IBookDetails | null> {
+  async findOne({
+    id,
+    user_id,
+  }: {
+    id: string;
+    user_id?: string;
+  }): Promise<IBookDetails | null> {
     try {
       const res = await this.trx
         .with('this_book', (q) =>
@@ -45,6 +48,13 @@ export class BookRepository
         .selectFrom('this_book')
         .selectAll('this_book')
         .select((q) => [
+          jsonObjectFrom(
+            q
+              .selectFrom('wishlists')
+              .where('wishlists.user_id', '=', user_id ?? '')
+              .where('wishlists.book_id', '=', id)
+              .select(this.trx.fn.countAll().as('is_in_wishlist')),
+          ).as('wishlist'),
           jsonArrayFrom(
             q
               .selectFrom('books')
@@ -131,7 +141,11 @@ export class BookRepository
           ).as('corner'),
         ])
         .executeTakeFirst();
-      return res ?? null;
+      if (!res) return null;
+      return {
+        ...omit(res, ['wishlist']),
+        is_in_wishlist: res.wishlist?.is_in_wishlist === '0' ? false : true,
+      };
     } catch (err) {
       throw new PostgresError(err);
     }
@@ -139,6 +153,7 @@ export class BookRepository
 
   async findManyWithPagination(
     query: QueryBookDto,
+    user_id?: string,
   ): Promise<InfinityPaginationResultType<IBookPopulated>> {
     try {
       const queryBuilder = this.trx
@@ -212,6 +227,13 @@ export class BookRepository
           )
           .selectAll('books')
           .select((q) => [
+            jsonObjectFrom(
+              q
+                .selectFrom('wishlists')
+                .where('wishlists.user_id', '=', user_id ?? '')
+                .whereRef('wishlists.book_id', '=', 'books.id')
+                .select(this.trx.fn.countAll().as('is_in_wishlist')),
+            ).as('wishlist'),
             jsonArrayFrom(
               q
                 .selectFrom('book_categories')
@@ -264,11 +286,17 @@ export class BookRepository
           .select(this.trx.fn.countAll().as('count'))
           .executeTakeFirst(),
       ]);
-      return infinityPagination(res, {
-        total_count: Number(total?.count ?? 0),
-        page: query.page,
-        limit: query.limit,
-      });
+      return infinityPagination(
+        res.map((book) => ({
+          ...omit(book, ['wishlist']),
+          is_in_wishlist: book.wishlist?.is_in_wishlist === '0' ? false : true,
+        })),
+        {
+          total_count: Number(total?.count ?? 0),
+          page: query.page,
+          limit: query.limit,
+        },
+      );
     } catch (err) {
       throw new PostgresError(err);
     }

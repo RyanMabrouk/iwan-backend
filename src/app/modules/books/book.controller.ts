@@ -19,6 +19,8 @@ import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPagin
 import { BookEntity, IBookPopulated } from './infrastructure/entity/entity';
 import { CreateBookDto } from './dto/create.dto';
 import { IsPublic } from 'src/app/auth/IsPublic.decorator';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
+import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
 
 @Controller({
   path: 'books',
@@ -33,14 +35,18 @@ export class BooksController {
   @Get()
   async getMany(
     @Query() query: QueryBookDto,
+    @AuthenticatedUser() userJwt?: ITokenPayload,
   ): Promise<InfinityPaginationResultType<IBookPopulated>> {
-    return this.service.findManyWithPagination(query);
+    return this.service.findManyWithPagination(query, userJwt?.sub);
   }
 
   @IsPublic()
   @Get(':id')
-  async get(@Param('id', ParseUUIDPipe) id: string): Promise<IBookPopulated> {
-    return this.service.findOne({ id });
+  async get(
+    @Param('id', ParseUUIDPipe) id: string,
+    @AuthenticatedUser() userJwt?: ITokenPayload,
+  ): Promise<IBookPopulated> {
+    return this.service.findOne({ id, user_id: userJwt?.sub });
   }
 
   @Patch(':id')

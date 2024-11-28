@@ -24,12 +24,19 @@ export class BooksService {
 
   async findManyWithPagination(
     query: QueryBookDto,
+    user_id?: string,
   ): Promise<InfinityPaginationResultType<IBookPopulated>> {
-    return this.repository.findManyWithPagination(query);
+    return this.repository.findManyWithPagination(query, user_id);
   }
 
-  async findOne({ id }: { id: string }): Promise<IBookPopulated> {
-    const user = await this.repository.findOne({ id });
+  async findOne({
+    id,
+    user_id,
+  }: {
+    id: string;
+    user_id?: string;
+  }): Promise<IBookPopulated> {
+    const user = await this.repository.findOne({ id, user_id });
     if (user === null) {
       throw new NotFoundException(ERRORS('Book not found'));
     }

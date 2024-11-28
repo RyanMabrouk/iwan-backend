@@ -71,6 +71,7 @@ export type BookSummary = Pick<
 export interface IBookDetails extends IBookPopulated {
   writer_books: BookSummary[];
   recommended_books: BookSummary[];
+  is_in_wishlist: boolean;
 }
 
 export type NewBook = Insertable<KyselyBookEntity>;
