@@ -49,12 +49,12 @@ export class BookRepository {
         .selectAll('this_book')
         .select((q) => [
           user_id
-            ? jsonObjectFrom(
+            ? jsonArrayFrom(
                 q
                   .selectFrom('wishlists')
-                  .where('wishlists.user_id', '=', user_id ?? '')
+                  .where('wishlists.user_id', '=', user_id)
                   .where('wishlists.book_id', '=', id)
-                  .select(this.trx.fn.countAll().as('is_in_wishlist')),
+                  .select('wishlists.book_id'),
               ).as('wishlist')
             : 'this_book.id',
           jsonArrayFrom(
@@ -146,7 +146,7 @@ export class BookRepository {
       if (!res) return null;
       return {
         ...omit(res, ['wishlist']),
-        is_in_wishlist: res.wishlist?.is_in_wishlist === '0' ? false : true,
+        is_in_wishlist: res.wishlist.length > 0 ? true : false,
       };
     } catch (err) {
       throw new PostgresError(err);
@@ -230,12 +230,12 @@ export class BookRepository {
           .selectAll('books')
           .select((q) => [
             user_id
-              ? jsonObjectFrom(
+              ? jsonArrayFrom(
                   q
                     .selectFrom('wishlists')
-                    .where('wishlists.user_id', '=', user_id ?? '')
+                    .where('wishlists.user_id', '=', user_id)
                     .whereRef('wishlists.book_id', '=', 'books.id')
-                    .select(this.trx.fn.countAll().as('is_in_wishlist')),
+                    .select('wishlists.book_id'),
                 ).as('wishlist')
               : 'books.id',
             jsonArrayFrom(
@@ -293,7 +293,7 @@ export class BookRepository {
       return infinityPagination(
         res.map((book) => ({
           ...omit(book, ['wishlist']),
-          is_in_wishlist: book.wishlist?.is_in_wishlist === '0' ? false : true,
+          is_in_wishlist: book.wishlist.length > 0 ? true : false,
         })),
         {
           total_count: Number(total?.count ?? 0),
