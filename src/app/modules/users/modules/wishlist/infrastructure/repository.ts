@@ -11,6 +11,7 @@ import {
 import { QueryBookDto } from 'src/app/modules/books/dto/query.dto';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 import { infinityPagination } from 'src/app/shared/utils/infinityPagination';
+import { jsonObjectFrom } from 'kysely/helpers/postgres';
 
 export class WishlistRepository
   implements GenericRepository<KyselyWishlistEntity, never, never>
@@ -62,16 +63,30 @@ export class WishlistRepository
             q.offset((query.page - 1) * query.limit),
           )
           .selectAll(['books'])
+          .select((q) => [
+            jsonObjectFrom(
+              q
+                .selectFrom('writers')
+                .whereRef(`writers.id`, '=', `books.writer_id`)
+                .selectAll(),
+            ).as('writer'),
+          ])
           .execute(),
         queryBuilder
           .select(this.trx.fn.countAll().as('count'))
           .executeTakeFirst(),
       ]);
-      return infinityPagination(res, {
-        total_count: Number(total?.count ?? 0),
-        page: query.page,
-        limit: query.limit,
-      });
+      return infinityPagination(
+        res.map((book) => ({
+          ...book,
+          is_in_wishlist: true,
+        })),
+        {
+          total_count: Number(total?.count ?? 0),
+          page: query.page,
+          limit: query.limit,
+        },
+      );
     } catch (err) {
       throw new PostgresError(err);
     }
