@@ -56,7 +56,7 @@ export class BookRepository {
                   .where('wishlists.book_id', '=', id)
                   .select('wishlists.book_id'),
               ).as('wishlist')
-            : 'this_book.id',
+            : 'this_book.id', // this is so typescript doesn't complain
           jsonArrayFrom(
             q
               .selectFrom('books')
@@ -146,7 +146,10 @@ export class BookRepository {
       if (!res) return null;
       return {
         ...omit(res, ['wishlist']),
-        is_in_wishlist: res.wishlist.length > 0 ? true : false,
+        is_in_wishlist:
+          typeof res.wishlist === 'object' && res.wishlist?.length > 0
+            ? true
+            : false,
       };
     } catch (err) {
       throw new PostgresError(err);
@@ -237,7 +240,7 @@ export class BookRepository {
                     .whereRef('wishlists.book_id', '=', 'books.id')
                     .select('wishlists.book_id'),
                 ).as('wishlist')
-              : 'books.id',
+              : 'books.id', // this is so typescript doesn't complain
             jsonArrayFrom(
               q
                 .selectFrom('book_categories')
@@ -293,7 +296,10 @@ export class BookRepository {
       return infinityPagination(
         res.map((book) => ({
           ...omit(book, ['wishlist']),
-          is_in_wishlist: book.wishlist.length > 0 ? true : false,
+          is_in_wishlist:
+            typeof book.wishlist === 'object' && book.wishlist?.length > 0
+              ? true
+              : false,
         })),
         {
           total_count: Number(total?.count ?? 0),
