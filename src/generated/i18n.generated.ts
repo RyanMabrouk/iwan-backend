@@ -31,6 +31,7 @@ export type I18nTranslations = {
         "Failed to add book to event": string;
         "Event not found": string;
         "Banner not found!": string;
+        "Price after discount cannot be greater than price": string;
     };
     "properties": {
         "title": string;

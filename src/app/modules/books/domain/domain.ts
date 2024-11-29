@@ -1,12 +1,23 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { NewBook } from '../infrastructure/entity/entity';
 import { DiscountTypeEnum } from 'src/types/other/enums.types';
+import { BadRequestException } from '@nestjs/common';
+import { ERRORS } from 'src/assets/constants/errors';
 
 export class Book extends AggregateRoot {
   readonly data: NewBook;
   constructor(entity: NewBook) {
     super();
     this.data = entity;
+    if (
+      this.data.price_after_discount &&
+      this.data.price &&
+      this.data.price_after_discount > this.data.price
+    ) {
+      throw new BadRequestException(
+        ERRORS('Price after discount cannot be greater than price'),
+      );
+    }
   }
   static calculatePriceAfterDiscount({
     price,

@@ -23,5 +23,6 @@
   "Failed to remove book from event": "فشل في إزالة الكتاب من الحدث",
   "Failed to add book to event": "فشل في إضافة الكتاب إلى الحدث",
   "Event not found": "الحدث غير موجود",
-  "Banner not found!": "البانر غير موجود!"
+  "Banner not found!": "البانر غير موجود!",
+  "Price after discount cannot be greater than price": "لا يمكن أن يكون السعر بعد الخصم أكبر من السعر"
 }
