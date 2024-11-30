@@ -187,7 +187,7 @@ export class BookRepository {
             ),
           ),
         )
-        .$if(!!query.most_sold, (q) =>
+        .$if(!!query.extra_filters?.most_sold, (q) =>
           q
             .innerJoin('orders_products', 'orders_products.book_id', 'books.id')
             .groupBy(['books.id', 'orders_products.id'])
@@ -195,19 +195,19 @@ export class BookRepository {
               this.trx.fn
                 .sum('orders_products.quantity')
                 .filterWhereRef('orders_products.book_id', '=', 'books.id'),
-              query.most_sold,
+              query.extra_filters?.most_sold,
             ),
         )
-        .$if(!!query.categories_ids, (q) =>
+        .$if(!!query.extra_filters?.categories_ids, (q) =>
           q
             .innerJoin('book_categories', 'book_categories.book_id', 'books.id')
             .where(
               'book_categories.category_id',
               'in',
-              query.categories_ids as string[],
+              query.extra_filters?.categories_ids as string[],
             ),
         )
-        .$if(!!query.subcategories_ids, (q) =>
+        .$if(!!query.extra_filters?.subcategories_ids, (q) =>
           q
             .innerJoin(
               'book_subcategories',
@@ -217,7 +217,7 @@ export class BookRepository {
             .where(
               'book_subcategories.subcategory_id',
               'in',
-              query.subcategories_ids as string[],
+              query.extra_filters?.subcategories_ids as string[],
             ),
         );
 

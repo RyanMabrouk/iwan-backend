@@ -1,8 +1,16 @@
-import { IsArray, IsIn, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsIn,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { QueryDtoWithPagination } from '../../../shared/dto/QueryDtoWithPagination.dto';
 import { IQueryBookKeys } from '../infrastructure/entity/entity';
+import { Type } from 'class-transformer';
 
-export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
+class ExtraBookFiltersDto {
   @IsOptional()
   @IsString()
   @IsIn(['asc', 'desc'])
@@ -13,6 +21,7 @@ export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
     each: true,
   })
   @IsArray()
+  @ArrayNotEmpty()
   categories_ids?: string[];
 
   @IsOptional()
@@ -20,5 +29,13 @@ export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
     each: true,
   })
   @IsArray()
+  @ArrayNotEmpty()
   subcategories_ids?: string[];
+}
+
+export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ExtraBookFiltersDto)
+  extra_filters?: ExtraBookFiltersDto;
 }
