@@ -2,6 +2,7 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsIn,
+  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
@@ -37,5 +38,6 @@ export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
   @IsOptional()
   @ValidateNested()
   @Type(() => ExtraBookFiltersDto)
+  @IsObject()
   extra_filters?: ExtraBookFiltersDto;
 }
