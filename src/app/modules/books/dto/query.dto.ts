@@ -2,7 +2,6 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsIn,
-  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -36,6 +35,5 @@ class ExtraBookFiltersDto {
 export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
   @IsOptional()
   @Type(() => ExtraBookFiltersDto)
-  @IsObject()
   extra_filters?: ExtraBookFiltersDto;
 }
