@@ -4,7 +4,6 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsPhoneNumber,
   IsPostalCode,
   IsString,
   ValidateNested,
@@ -29,7 +28,7 @@ export class CreateOrderDto {
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   email!: string;
 
-  @IsPhoneNumber('TN', { message: TranslateDto('IsPhoneNumber') })
+  @IsString({ message: TranslateDto('IsString') })
   phone_number!: string;
 
   @IsString({ message: TranslateDto('IsString') })
