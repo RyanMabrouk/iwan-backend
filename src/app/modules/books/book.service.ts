@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -103,7 +104,7 @@ export class BooksService {
     const old_stock = book.stock;
     const new_quantity = old_stock - quantity;
     if (new_quantity < 0) {
-      throw new InternalServerErrorException(ERRORS('Not enough stock'));
+      throw new BadRequestException(ERRORS('Not enough stock'));
     }
     const updatedEntity = await this.repository.updateOne({
       id,
