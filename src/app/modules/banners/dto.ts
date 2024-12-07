@@ -8,6 +8,9 @@ export class NewBannerDto implements NewBanner {
 
   @IsUUID(4, { message: TranslateDto('IsUUID') })
   book_id!: string;
+
+  @IsUrl({}, { message: TranslateDto('IsUrl') })
+  phone_url!: string;
 }
 
 export class UpdateBannerDto implements UpdateBanner {

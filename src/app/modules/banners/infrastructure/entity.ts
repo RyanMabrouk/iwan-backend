@@ -9,6 +9,7 @@ import {
 export interface KyselyBannerEntity {
   id: GeneratedAlways<string>;
   url: string;
+  phone_url: string;
   book_id: string;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;
