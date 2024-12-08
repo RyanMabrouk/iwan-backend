@@ -13,16 +13,23 @@ import { RolesEnum } from 'src/types/other/enums.types';
 @Injectable()
 export class ReviewService {
   constructor(
-    private readonly categoryRepository: ReviewRepository,
+    private readonly repo: ReviewRepository,
     private readonly usersService: UsersService,
   ) {}
 
   async findMany(query: QueryReviewDto): Promise<ReviewEntity[]> {
-    return await this.categoryRepository.findMany(query);
+    return await this.repo.findMany(query);
   }
 
   async createOne(payload: NewReviewDto): Promise<ReviewEntity> {
-    const entity = await this.categoryRepository.createOne(payload);
+    const review = await this.repo.findOne({
+      book_id: payload.book_id,
+      user_id: payload.user_id,
+    });
+    if (review) {
+      throw new ForbiddenException(ERRORS('Review already exists!'));
+    }
+    const entity = await this.repo.createOne(payload);
     if (!entity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }
@@ -30,7 +37,7 @@ export class ReviewService {
   }
 
   async updateOne(id: string, payload: UpdateReviewDto): Promise<ReviewEntity> {
-    const entity = await this.categoryRepository.updateOne({ id, payload });
+    const entity = await this.repo.updateOne({ id, payload });
     if (!entity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }
@@ -44,7 +51,7 @@ export class ReviewService {
     id: string;
     user_id: string;
   }): Promise<ReviewEntity> {
-    const entity = await this.categoryRepository.deleteOne({ id });
+    const entity = await this.repo.deleteOne({ id });
     if (!entity) {
       throw new InternalServerErrorException(ERRORS('Unexpected error!'));
     }

@@ -24,5 +24,6 @@
   "Failed to add book to event": "Failed to add book to event",
   "Event not found": "Event not found",
   "Banner not found!": "Banner not found!",
-  "Price after discount cannot be greater than price": "Price after discount cannot be greater than price"
+  "Price after discount cannot be greater than price": "Price after discount cannot be greater than price",
+  "Review already exists!": "Review already exists!"
 }

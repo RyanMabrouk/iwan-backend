@@ -21,6 +21,26 @@ export class ReviewRepository
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
 
+  async findOne({
+    book_id,
+    user_id,
+  }: {
+    book_id: string;
+    user_id: string;
+  }): Promise<ReviewEntity | null> {
+    try {
+      const res = await this.trx
+        .selectFrom('reviews')
+        .selectAll()
+        .where('book_id', '=', book_id)
+        .where('user_id', '=', user_id)
+        .executeTakeFirst();
+      return res ?? null;
+    } catch (err) {
+      throw new PostgresError(err);
+    }
+  }
+
   async findMany(query: QueryReviewDto): Promise<ReviewEntityPopulated[]> {
     try {
       const res = await this.trx
