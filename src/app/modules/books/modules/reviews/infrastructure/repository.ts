@@ -52,10 +52,16 @@ export class ReviewRepository
         )
         .select((qb) => [
           jsonObjectFrom(
-            qb.selectFrom('books').selectAll().whereRef('id', '=', 'book_id'),
+            qb
+              .selectFrom('books')
+              .selectAll()
+              .whereRef('books.id', '=', 'reviews.book_id'),
           ).as('book'),
           jsonObjectFrom(
-            qb.selectFrom('users').selectAll().whereRef('id', '=', 'user_id'),
+            qb
+              .selectFrom('users')
+              .selectAll()
+              .whereRef('users.user_id', '=', 'reviews.user_id'),
           ).as('user'),
         ])
         .execute();
