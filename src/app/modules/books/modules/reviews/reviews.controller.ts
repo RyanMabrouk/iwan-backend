@@ -15,6 +15,8 @@ import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { ReviewEntity } from './infrastructure/entity';
 import { IsPublic } from 'src/app/auth/IsPublic.decorator';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
+import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
 
 @Controller('reviews')
 export class ReviewController {
@@ -47,8 +49,11 @@ export class ReviewController {
   }
 
   @Delete(':id')
-  async deleteOne(@Param('id') id: string): Promise<ReviewEntity> {
-    const res = this.reviewService.deleteOne(id);
+  async deleteOne(
+    @Param('id') id: string,
+    @AuthenticatedUser() userJwt: ITokenPayload,
+  ): Promise<ReviewEntity> {
+    const res = this.reviewService.deleteOne({ id, user_id: userJwt.sub });
     this.trx.commit();
     return res;
   }
