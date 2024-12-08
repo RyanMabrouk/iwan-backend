@@ -183,10 +183,7 @@ export class BookRepository {
               ? true
               : false,
         })),
-        is_in_wishlist:
-          typeof res.wishlist === 'object' && res.wishlist?.length > 0
-            ? true
-            : false,
+        is_in_wishlist: Array.isArray(res.wishlist) && res.wishlist.length > 0,
         total_rating:
           Number(res.reviews_stats?.total_reviews_rating ?? 0) /
           (Number(res.reviews_stats?.total_reviews_count ?? 1) || 1),
@@ -355,9 +352,7 @@ export class BookRepository {
         res.map((book) => ({
           ...omit(book, ['wishlist', 'reviews_stats']),
           is_in_wishlist:
-            typeof book.wishlist === 'object' && book.wishlist?.length > 0
-              ? true
-              : false,
+            Array.isArray(book.wishlist) && book.wishlist.length > 0,
           total_rating:
             Number(book.reviews_stats?.total_reviews_rating ?? 0) /
             (Number(book.reviews_stats?.total_reviews_count ?? 1) || 1),

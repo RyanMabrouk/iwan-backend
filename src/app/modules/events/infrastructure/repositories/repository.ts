@@ -11,7 +11,7 @@ import { GenericRepository } from 'src/app/shared/types/GenericRepository';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
 import { PostgresError } from 'src/app/shared/Errors/PostgresError';
-import { jsonArrayFrom } from 'kysely/helpers/postgres';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { NewEventBooks } from '../entity/eventBooks';
 
 export class EventRepository
@@ -21,7 +21,10 @@ export class EventRepository
   constructor(
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
-  async findOne({ id }: { id: string }): Promise<IEventPopulated | null> {
+  async findOne(
+    { id }: { id: string },
+    { user_id }: { user_id?: string },
+  ): Promise<IEventPopulated | null> {
     try {
       const res = await this.trx
         .selectFrom('events')
@@ -34,23 +37,46 @@ export class EventRepository
               .whereRef(`event_books.event_id`, '=', `events.id`)
               .innerJoin('books', 'books.id', 'event_books.book_id')
               .select((q) => [
+                user_id
+                  ? jsonArrayFrom(
+                      q
+                        .selectFrom('wishlists')
+                        .where('wishlists.user_id', '=', user_id)
+                        .whereRef('wishlists.book_id', '=', 'books.id')
+                        .select('wishlists.book_id'),
+                    ).as('wishlist')
+                  : 'books.id',
+                jsonObjectFrom(
+                  q
+                    .selectFrom('writers')
+                    .whereRef(`writers.id`, '=', `books.writer_id`)
+                    .selectAll(),
+                ).as('writer'),
                 jsonArrayFrom(
                   q
                     .selectFrom('book_categories')
-                    .where(`book_categories.book_id`, '=', id)
+                    .whereRef(`book_categories.book_id`, '=', 'books.id')
                     .innerJoin(
                       'categories',
                       'categories.id',
                       'book_categories.category_id',
                     )
-                    .selectAll('categories'),
+                    .selectAll(['categories']),
                 ).as('categories'),
               ])
               .selectAll('books'),
           ).as('books'),
         ])
         .executeTakeFirst();
-      return res ?? null;
+      if (!res) return null;
+      return {
+        ...res,
+        books: res.books.map((book) => ({
+          ...book,
+          is_in_wishlist:
+            Array.isArray(book.wishlist) && book.wishlist.length > 0,
+        })),
+      };
     } catch (err) {
       throw new PostgresError(err);
     }

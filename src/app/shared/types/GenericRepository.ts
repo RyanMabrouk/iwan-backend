@@ -15,6 +15,7 @@ export interface GenericRepository<
   findMany?(...args: any): Promise<Selectable<TEntity>[]>;
   findOne?(
     args: FindOneArgs<Selectable<TEntity>>,
+    ...other_args: unknown[]
   ): Promise<Selectable<TEntity> | null>;
   findManyWithPagination?(
     query: QueryDto,

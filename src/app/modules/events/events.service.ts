@@ -22,8 +22,14 @@ export class EventsService {
     return this.repository.findMany();
   }
 
-  async findOne({ id }: { id: string }): Promise<IEventPopulated> {
-    const user = await this.repository.findOne({ id });
+  async findOne({
+    id,
+    user_id,
+  }: {
+    id: string;
+    user_id?: string;
+  }): Promise<IEventPopulated> {
+    const user = await this.repository.findOne({ id }, { user_id });
     if (user === null) {
       throw new NotFoundException(ERRORS('Event not found'));
     }

@@ -16,6 +16,8 @@ import { CreateEventDto } from './dto/create.dto';
 import { IsPublic } from 'src/app/auth/IsPublic.decorator';
 import { EventsService } from './events.service';
 import { UpdateEventDto } from './dto/update.dto';
+import { AuthenticatedUser } from 'src/app/auth/AuthUser.decorator';
+import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
 
 @Controller({
   path: 'events',
@@ -34,8 +36,11 @@ export class EventsController {
 
   @IsPublic()
   @Get(':id')
-  async get(@Param('id', ParseUUIDPipe) id: string): Promise<IEventPopulated> {
-    return this.service.findOne({ id });
+  async get(
+    @Param('id', ParseUUIDPipe) id: string,
+    @AuthenticatedUser() userJwt?: ITokenPayload,
+  ): Promise<IEventPopulated> {
+    return this.service.findOne({ id, user_id: userJwt?.sub });
   }
 
   @Patch(':id')
