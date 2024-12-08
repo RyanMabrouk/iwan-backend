@@ -10,6 +10,7 @@ import { OrderProductService } from './modules/order_products/OrderProduct.servi
 import { CreateCancelOrderDto, CreateOrderDto } from './dto/create.dto';
 import { PaymentStatusEnum } from 'src/types/other/enums.types';
 import { BooksService } from '../../books/book.service';
+import { sendMail } from 'src/app/mail/send';
 
 @Injectable()
 export class OrdersService {
@@ -88,6 +89,12 @@ export class OrdersService {
     if (updatedEntity === null) {
       throw new NotFoundException(ERRORS('Order not found'));
     }
+    await sendMail({
+      to: order.email,
+      subject: 'Order canceled',
+      text: 'Your order has been canceled',
+      html: 'Your order has been canceled',
+    });
     return updatedEntity;
   }
 
@@ -103,14 +110,20 @@ export class OrdersService {
     if (updatedEntity === null) {
       throw new NotFoundException(ERRORS('Order not found'));
     }
-    await Promise.all(
-      order.products.map((product) =>
+    await Promise.all([
+      ...order.products.map((product) =>
         this.booksService.decrementStock({
           id: product.book_id,
           quantity: product.quantity,
         }),
       ),
-    );
+    ]);
+    await sendMail({
+      to: order.email,
+      subject: 'Order confirmed',
+      text: 'Your order has been confirmed',
+      html: 'Your order has been confirmed',
+    });
     return updatedEntity;
   }
 
