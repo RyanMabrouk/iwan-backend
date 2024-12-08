@@ -12,7 +12,7 @@ export interface GenericRepository<
   UpdateDto = unknown,
   QueryDto = unknown,
 > {
-  findMany?(): Promise<Selectable<TEntity>[]>;
+  findMany?(...args: any): Promise<Selectable<TEntity>[]>;
   findOne?(
     args: FindOneArgs<Selectable<TEntity>>,
   ): Promise<Selectable<TEntity> | null>;

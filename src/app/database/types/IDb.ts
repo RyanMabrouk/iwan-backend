@@ -5,6 +5,7 @@ import { KyselyBookEntity } from 'src/app/modules/books/infrastructure/entity/en
 import { KyselyCategoryEntity } from 'src/app/modules/books/modules/category/infrastructure/entity';
 import { KyselyCornerEntity } from 'src/app/modules/books/modules/corners/infrastructure/entity';
 import { KyselyCoverTypeEntity } from 'src/app/modules/books/modules/coverType/infrastructure/entity';
+import { KyselyReviewEntity } from 'src/app/modules/books/modules/reviews/infrastructure/entity';
 import { KyselyShareHouseEntity } from 'src/app/modules/books/modules/shareHouse/infrastructure/entity';
 import { KyselySubcategoryEntity } from 'src/app/modules/books/modules/subcategory/infrastructure/entity';
 import { KyselyWriterEntity } from 'src/app/modules/books/modules/writer/infrastructure/entity';
@@ -32,4 +33,5 @@ export interface IDb {
   corners: KyselyCornerEntity;
   events: KyselyEventEntity;
   event_books: KyselyEventBooksEntity;
+  reviews: KyselyReviewEntity;
 }

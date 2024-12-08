@@ -89,7 +89,7 @@ export class BookRepository {
                 'book_categories.category_id',
               )
               .limit(8)
-              .select([
+              .select((qb) => [
                 'books.id',
                 'books.title',
                 'books.slug',
@@ -99,6 +99,21 @@ export class BookRepository {
                 'books.discount',
                 'books.discount_type',
                 'books.price_dollar',
+                jsonObjectFrom(
+                  qb
+                    .selectFrom('writers')
+                    .whereRef(`writers.id`, '=', `books.writer_id`)
+                    .selectAll(),
+                ).as('writer'),
+                user_id
+                  ? jsonArrayFrom(
+                      qb
+                        .selectFrom('wishlists')
+                        .where('wishlists.user_id', '=', user_id)
+                        .whereRef('wishlists.book_id', '=', 'books.id')
+                        .select('wishlists.book_id'),
+                    ).as('wishlist')
+                  : 'this_book.id',
               ]),
           ).as('recommended_books'),
           jsonArrayFrom(
@@ -141,15 +156,34 @@ export class BookRepository {
               .whereRef(`corners.id`, '=', `this_book.corner_id`)
               .selectAll(),
           ).as('corner'),
+          this.trx.fn
+            .sum('reviews.rating')
+            .filterWhere('reviews.book_id', '=', id)
+            .as('total_reviews_rating'),
+          this.trx.fn
+            .count('reviews.id')
+            .filterWhere('reviews.book_id', '=', id)
+            .as('total_reviews_count'),
         ])
         .executeTakeFirst();
       if (!res) return null;
       return {
-        ...omit(res, ['wishlist']),
+        ...omit(res, ['wishlist', 'total_reviews_rating']),
+        recommended_books: res.recommended_books.map((book) => ({
+          ...omit(book, ['wishlist']),
+          is_in_wishlist:
+            typeof book.wishlist === 'object' && book.wishlist?.length > 0
+              ? true
+              : false,
+        })),
         is_in_wishlist:
           typeof res.wishlist === 'object' && res.wishlist?.length > 0
             ? true
             : false,
+        total_rating:
+          Number(res.total_reviews_rating ?? 0) /
+          Number(res.total_reviews_count ?? 1),
+        total_reviews_count: Number(res.total_reviews_count ?? 0),
       };
     } catch (err) {
       throw new PostgresError(err);
@@ -287,6 +321,14 @@ export class BookRepository {
                 .whereRef(`corners.id`, '=', `books.corner_id`)
                 .selectAll(),
             ).as('corner'),
+            this.trx.fn
+              .sum('reviews.rating')
+              .filterWhere('reviews.book_id', '=', 'books.id')
+              .as('total_reviews_rating'),
+            this.trx.fn
+              .count('reviews.id')
+              .filterWhere('reviews.book_id', '=', 'books.id')
+              .as('total_reviews_count'),
           ])
           .execute(),
         queryBuilder
@@ -295,11 +337,15 @@ export class BookRepository {
       ]);
       return infinityPagination(
         res.map((book) => ({
-          ...omit(book, ['wishlist']),
+          ...omit(book, ['wishlist', 'total_reviews_rating']),
           is_in_wishlist:
             typeof book.wishlist === 'object' && book.wishlist?.length > 0
               ? true
               : false,
+          total_rating:
+            Number(book.total_reviews_rating ?? 0) /
+            Number(book.total_reviews_count ?? 1),
+          total_reviews_count: Number(book.total_reviews_count ?? 0),
         })),
         {
           total_count: Number(total?.count ?? 0),

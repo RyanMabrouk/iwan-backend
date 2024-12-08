@@ -70,8 +70,13 @@ export type BookSummary = Pick<
 
 export interface IBookDetails extends IBookPopulated {
   writer_books: BookSummary[];
-  recommended_books: BookSummary[];
+  recommended_books: (BookSummary & {
+    writer: WriterEntity | null;
+    is_in_wishlist: boolean;
+  })[];
   is_in_wishlist: boolean;
+  total_rating: number;
+  total_reviews_count: number;
 }
 
 export type NewBook = Insertable<KyselyBookEntity>;
