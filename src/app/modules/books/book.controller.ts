@@ -37,6 +37,7 @@ export class BooksController {
     @Query() query: QueryBookDto,
     @AuthenticatedUser() userJwt?: ITokenPayload,
   ): Promise<InfinityPaginationResultType<IBookPopulated>> {
+    console.log('🚀 ~ BooksController ~ userJwt:', userJwt);
     return this.service.findManyWithPagination(query, userJwt?.sub);
   }
 

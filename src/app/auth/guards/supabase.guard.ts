@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
@@ -16,10 +21,6 @@ export class SupabaseGuard extends AuthGuard('jwt') implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      return true;
-    }
-
     const result = super.canActivate(context);
     if (result instanceof Observable) {
       return result
@@ -29,6 +30,30 @@ export class SupabaseGuard extends AuthGuard('jwt') implements CanActivate {
         )
         .toPromise() as Promise<boolean>;
     }
+    if (isPublic) {
+      return true;
+    }
     return result;
+  }
+
+  handleRequest(
+    err: unknown,
+    user: any,
+    info: unknown,
+    context: ExecutionContext,
+  ) {
+    if (err || !user) {
+      const isPublic = this.reflector.getAllAndOverride<boolean>(
+        IS_PUBLIC_KEY,
+        [context.getHandler(), context.getClass()],
+      );
+      if (isPublic) {
+        return user;
+      }
+      throw err || new UnauthorizedException();
+    }
+    const request = context.switchToHttp().getRequest();
+    request.user = user;
+    return user;
   }
 }
