@@ -32,7 +32,16 @@ export class WishlistController {
     @Query() query: QueryBookDto,
     @AuthenticatedUser() userJwt: ITokenPayload,
   ): Promise<InfinityPaginationResultType<BookEntity>> {
-    return this.service.findManyBooksWithPagination(query, userJwt.sub);
+    return this.service.findManyBooksWithPagination(
+      {
+        ...query,
+        sort: {
+          orderBy: 'books.created_at',
+          order: 'desc',
+        },
+      },
+      userJwt.sub,
+    );
   }
 
   @Post()

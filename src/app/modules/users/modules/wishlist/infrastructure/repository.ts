@@ -29,7 +29,6 @@ export class WishlistRepository
         .selectFrom('wishlists')
         .where('wishlists.user_id', '=', user_id)
         .innerJoin('books', 'books.id', 'wishlists.book_id')
-        .orderBy('books.created_at', 'desc')
         .$if(!!query.filters, (q) =>
           q.where((e) =>
             e.and(
