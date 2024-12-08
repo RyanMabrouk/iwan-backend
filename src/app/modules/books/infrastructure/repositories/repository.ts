@@ -156,19 +156,26 @@ export class BookRepository {
               .whereRef(`corners.id`, '=', `this_book.corner_id`)
               .selectAll(),
           ).as('corner'),
-          this.trx.fn
-            .sum('reviews.rating')
-            .filterWhere('reviews.book_id', '=', id)
-            .as('total_reviews_rating'),
-          this.trx.fn
-            .count('reviews.id')
-            .filterWhere('reviews.book_id', '=', id)
-            .as('total_reviews_count'),
+          jsonObjectFrom(
+            q
+              .selectFrom('reviews')
+              .where('reviews.book_id', '=', id)
+              .select((qb) => [
+                qb.fn
+                  .sum('reviews.rating')
+                  .filterWhere('reviews.book_id', '=', id)
+                  .as('total_reviews_rating'),
+                qb.fn
+                  .count('reviews.id')
+                  .filterWhere('reviews.book_id', '=', id)
+                  .as('total_reviews_count'),
+              ]),
+          ).as('reviews_stats'),
         ])
         .executeTakeFirst();
       if (!res) return null;
       return {
-        ...omit(res, ['wishlist', 'total_reviews_rating']),
+        ...omit(res, ['wishlist', 'reviews_stats']),
         recommended_books: res.recommended_books.map((book) => ({
           ...omit(book, ['wishlist']),
           is_in_wishlist:
@@ -181,9 +188,11 @@ export class BookRepository {
             ? true
             : false,
         total_rating:
-          Number(res.total_reviews_rating ?? 0) /
-          Number(res.total_reviews_count ?? 1),
-        total_reviews_count: Number(res.total_reviews_count ?? 0),
+          Number(res.reviews_stats?.total_reviews_rating ?? 0) /
+          (Number(res.reviews_stats?.total_reviews_count ?? 1) || 1),
+        total_reviews_count: Number(
+          res.reviews_stats?.total_reviews_count ?? 0,
+        ),
       };
     } catch (err) {
       throw new PostgresError(err);
@@ -196,7 +205,7 @@ export class BookRepository {
   ): Promise<InfinityPaginationResultType<IBookPopulated>> {
     try {
       const queryBuilder = this.trx
-        .selectFrom('books')
+        .selectFrom(['books'])
         .$if(!!query.filters, (q) =>
           q.where((e) =>
             e.and(
@@ -321,14 +330,21 @@ export class BookRepository {
                 .whereRef(`corners.id`, '=', `books.corner_id`)
                 .selectAll(),
             ).as('corner'),
-            this.trx.fn
-              .sum('reviews.rating')
-              .filterWhere('reviews.book_id', '=', 'books.id')
-              .as('total_reviews_rating'),
-            this.trx.fn
-              .count('reviews.id')
-              .filterWhere('reviews.book_id', '=', 'books.id')
-              .as('total_reviews_count'),
+            jsonObjectFrom(
+              q
+                .selectFrom('reviews')
+                .whereRef('reviews.book_id', '=', 'books.id')
+                .select((qb) => [
+                  qb.fn
+                    .sum('reviews.rating')
+                    .filterWhereRef('reviews.book_id', '=', 'books.id')
+                    .as('total_reviews_rating'),
+                  qb.fn
+                    .count('reviews.id')
+                    .filterWhereRef('reviews.book_id', '=', 'books.id')
+                    .as('total_reviews_count'),
+                ]),
+            ).as('reviews_stats'),
           ])
           .execute(),
         queryBuilder
@@ -337,15 +353,18 @@ export class BookRepository {
       ]);
       return infinityPagination(
         res.map((book) => ({
-          ...omit(book, ['wishlist', 'total_reviews_rating']),
+          ...omit(book, ['wishlist', 'reviews_stats']),
           is_in_wishlist:
             typeof book.wishlist === 'object' && book.wishlist?.length > 0
               ? true
               : false,
           total_rating:
-            Number(book.total_reviews_rating ?? 0) /
-            Number(book.total_reviews_count ?? 1),
-          total_reviews_count: Number(book.total_reviews_count ?? 0),
+            Number(book.reviews_stats?.total_reviews_rating ?? 0) /
+            (Number(book.reviews_stats?.total_reviews_count ?? 1) || 1),
+
+          total_reviews_count: Number(
+            book.reviews_stats?.total_reviews_count ?? 0,
+          ),
         })),
         {
           total_count: Number(total?.count ?? 0),
