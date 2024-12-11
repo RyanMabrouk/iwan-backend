@@ -67,6 +67,14 @@ export class OrdersService {
         order_id: entity?.id,
       })),
     );
+
+    await sendMail({
+      to: entity.email,
+      subject: 'Order created',
+      text: 'Your order has been created',
+      html: 'Your order has been created',
+    });
+
     return entity;
   }
 
