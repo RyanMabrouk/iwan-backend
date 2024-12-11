@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import axios from 'axios';
 
 const BASE_URL = 'https://api.sendgrid.com';
@@ -48,12 +49,12 @@ export async function sendMail({
         'Content-Type': 'application/json',
       },
     });
-    console.log('Email sent to ' + to);
+    Logger.log('Email sent to ' + to);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(error.response?.data);
+      Logger.error(error.response?.data);
     } else {
-      console.error('Error sending email:' + error);
+      Logger.error('Error sending email:' + error);
     }
   }
 }
