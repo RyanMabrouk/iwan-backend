@@ -153,98 +153,111 @@ const orderCancellationTemplate = (
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${isAdmin ? 'إشعار إلغاء الطلب' : 'تأكيد إلغاء الطلب'}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f6f9fc;
+          margin: 0;
+          padding: 0;
+          text-align: right;
+        }
+        .container {
+          max-width: 600px;
+          margin: 20px auto;
+          background-color: #ffffff;
+          border: 1px solid #e0e0e0;
+          overflow: hidden;
+        }
+        .header {
+          padding: 20px;
+          background-color: #d32f2f;
+          text-align: center;
+        }
+        .header h1 {
+          color: #ffffff;
+          margin: 0;
+          font-size: 24px;
+        }
+        .content {
+          padding: 20px;
+        }
+        .footer {
+          padding: 10px;
+          text-align: center;
+          background-color: #f8f8f8;
+          color: #666666;
+          font-size: 12px;
+        }
+        table.details {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+        table.details th,
+        table.details td {
+          border: 1px solid #e0e0e0;
+          padding: 10px;
+          text-align: right;
+        }
+        table.details th {
+          background-color: #f0f0f0;
+        }
+      </style>
     </head>
-    <body style="font-family: 'Arial', sans-serif; line-height: 1.6; background-color: #f6f9fc; margin: 0; padding: 0; text-align: right;">
-      <table dir="rtl" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <tr>
-          <td style="padding: 40px 20px; text-align: center; background-color: #d32f2f; background-image: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
-              ${isAdmin ? 'إشعار إلغاء الطلب' : 'تأكيد إلغاء الطلب'}
-            </h1>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 30px 20px;">
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>${isAdmin ? 'إشعار إلغاء الطلب' : 'تأكيد إلغاء الطلب'}</h1>
+        </div>
+        <div class="content">
+          ${
+            isAdmin
+              ? `<p>تم إلغاء طلب جديد من قبل العميل.</p>`
+              : `<p>عزيزي ${order.name}،</p>
+                 <p>تم إلغاء طلبكم رقم <strong>${orderNumber}</strong> بنجاح.</p>`
+          }
+          <table class="details">
+            <tr>
+              <th colspan="2">تفاصيل الإلغاء</th>
+            </tr>
+            <tr>
+              <th>رقم الطلب:</th>
+              <td>${orderNumber}</td>
+            </tr>
             ${
               isAdmin
                 ? `
-                <p style="font-size: 18px; color: #333333; margin-bottom: 20px; text-align: right;">
-                  تم إلغاء طلب جديد من قبل العميل.
-                </p>
+                  <tr>
+                    <th>اسم العميل:</th>
+                    <td>${order.name}</td>
+                  </tr>
+                  <tr>
+                    <th>البريد الإلكتروني:</th>
+                    <td>${order.email}</td>
+                  </tr>
+                  <tr>
+                    <th>رقم الهاتف:</th>
+                    <td>${order.phone_number}</td>
+                  </tr>
                 `
-                : `
-                <p style="font-size: 18px; color: #333333; margin-bottom: 20px; text-align: center;">
-                  عزيزي ${order.name} ،
-                </p>
-                <p style="font-size: 16px; color: #333333; margin-bottom: 20px; text-align: right;">
-                  نؤكد لكم أنه تم إلغاء طلبكم رقم <strong>${orderNumber}</strong> بنجاح.
-                </p>
-                `
+                : ''
             }
-            <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
-              <tr>
-                <td colspan="2" style="padding: 15px; background-color: #f8f8f8; font-weight: bold; font-size: 20px; color: #333333; text-align: center;">
-                  تفاصيل الإلغاء
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 15px; border-top: 1px solid #e0e0e0; font-weight: bold;">رقم الطلب:</td>
-                <td style="padding: 15px; border-top: 1px solid #e0e0e0;">${orderNumber}</td>
-              </tr>
-              ${
-                isAdmin
-                  ? `
-                  <tr>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0; font-weight: bold;">اسم العميل:</td>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0;">${order.name} </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0; font-weight: bold;">البريد الإلكتروني:</td>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0;">${order.email}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0; font-weight: bold;">رقم الهاتف:</td>
-                    <td style="padding: 15px; border-top: 1px solid #e0e0e0;">${order.phone_number}</td>
-                  </tr>
-                  `
-                  : ''
-              }
-              <tr>
-                <td style="padding: 15px; border-top: 1px solid #e0e0e0; font-weight: bold;">سبب الإلغاء:</td>
-                <td style="padding: 15px; border-top: 1px solid #e0e0e0;">${cancellationReason}</td>
-              </tr>
-            </table>
-            ${
-              isAdmin
-                ? `
-                <p style="font-size: 16px; color: #333333; margin-bottom: 20px; text-align: right;">
-                  يرجى مراجعة تفاصيل الإلغاء واتخاذ الإجراءات اللازمة.
-                </p>
-                `
-                : `
-                <p style="font-size: 16px; color: #333333; margin-bottom: 20px; text-align: right;">
-                  إذا كان لديكم أي استفسارات أو كنتم بحاجة إلى مزيد من المعلومات، فلا تترددوا في الاتصال بنا.
-                </p>
-                <p style="font-size: 16px; color: #333333; margin-bottom: 20px; text-align: right;">
-                  نأسف لعدم تمكنكم من إتمام هذا الطلب ونتطلع إلى خدمتكم في المستقبل.
-                </p>
-                `
-            }
-            <p style="font-size: 18px; color: #333333; margin-top: 30px; text-align: center; font-style: italic;">
-              ${
-                isAdmin
-                  ? 'شكراً لاهتمامكم السريع بهذا الأمر.'
-                  : 'شكراً لتفهمكم ودعمكم المستمر.'
-              }
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 20px; text-align: center; background-color: #f8f8f8; color: #666666; font-size: 14px;">
-            &copy; ${new Date().getFullYear()} مكتبة ايوان. جميع الحقوق محفوظة.
-          </td>
-        </tr>
-      </table>
+            <tr>
+              <th>سبب الإلغاء:</th>
+              <td>${cancellationReason}</td>
+            </tr>
+          </table>
+          ${
+            isAdmin
+              ? `<p>يرجى مراجعة تفاصيل الإلغاء واتخاذ الإجراءات اللازمة.</p>`
+              : `<p>إذا كان لديكم أي استفسارات، فلا تترددوا في الاتصال بنا.</p>
+                 <p>شكراً لتفهمكم ودعمكم المستمر.</p>`
+          }
+        </div>
+        <div class="footer">
+          &copy; ${new Date().getFullYear()} مكتبة ايوان. جميع الحقوق محفوظة.
+        </div>
+      </div>
     </body>
     </html>
   `;
