@@ -87,16 +87,24 @@ export class OrdersController {
   @Patch(':id/cancel')
   async cancel(
     @Param('id', ParseUUIDPipe) id: string,
+    @AuthenticatedUser() userJwt: ITokenPayload,
     @Body() body: CreateCancelOrderDto,
   ): Promise<OrderEntity> {
-    const res = await this.service.cancelOrder({ id, payload: body });
+    const res = await this.service.cancelOrder({
+      id,
+      payload: body,
+      user_id: userJwt.sub,
+    });
     this.trx.commit();
     return res;
   }
 
   @Patch(':id/confirm')
-  async confirm(@Param('id', ParseUUIDPipe) id: string): Promise<OrderEntity> {
-    const res = await this.service.confirmOrder({ id });
+  async confirm(
+    @Param('id', ParseUUIDPipe) id: string,
+    @AuthenticatedUser() userJwt: ITokenPayload,
+  ): Promise<OrderEntity> {
+    const res = await this.service.confirmOrder({ id, user_id: userJwt.sub });
     this.trx.commit();
     return res;
   }

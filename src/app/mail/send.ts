@@ -95,7 +95,7 @@ async function sendMailWithNodeMailer({
     });
 
     const info = await transporter.sendMail({
-      from: `Dar Iwen <${process.env.EMAIL_USER}>`,
+      from: `دار إيوان <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,
