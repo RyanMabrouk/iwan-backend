@@ -21,7 +21,9 @@ export class SupabaseGuard extends AuthGuard('jwt') implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    console.log('isPublic', isPublic);
     const result = super.canActivate(context);
+    console.log('result', result);
     if (result instanceof Observable) {
       return result
         .pipe(
