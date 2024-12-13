@@ -3,4 +3,4 @@ logs
 docker/local/api-postgres
 docker/prod/api-postgres
 dist
-.env
+config.bat
