@@ -1,3 +1,4 @@
+import { UsersService } from './../../users/user.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderFactory } from './factory/factory';
 import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
@@ -8,9 +9,14 @@ import { QueryOrderDto } from './dto/query.dto';
 import { OrderRepository } from './infrastructure/repositories/repository';
 import { OrderProductService } from './modules/order_products/OrderProduct.service';
 import { CreateCancelOrderDto, CreateOrderDto } from './dto/create.dto';
-import { PaymentStatusEnum } from 'src/types/other/enums.types';
+import { PaymentStatusEnum, RolesEnum } from 'src/types/other/enums.types';
 import { BooksService } from '../../books/book.service';
 import { sendMail } from 'src/app/mail/send';
+import {
+  orderCancellationTemplate,
+  orderDeliveryTemplate,
+  orderPlacementTemplates,
+} from 'src/app/mail/templates/emailTemplates';
 
 @Injectable()
 export class OrdersService {
@@ -18,6 +24,7 @@ export class OrdersService {
     private readonly repository: OrderRepository,
     private readonly ordersProducts: OrderProductService,
     private readonly booksService: BooksService,
+    private readonly usersService: UsersService,
     private readonly factory: OrderFactory,
   ) {}
 
@@ -67,14 +74,31 @@ export class OrdersService {
         order_id: entity?.id,
       })),
     );
+    const user = await this.usersService.findOne({ id: user_id });
+
+    await sendMail({
+      to: entity.email,
+      subject: 'تم إنشاء طلبك',
+      text: 'تم إنشاء طلبك بنجاح',
+      html: orderPlacementTemplates(
+        user.roles.includes(RolesEnum.ADMIN),
+        entity,
+        order.books,
+        entity.total_price,
+        entity.delivery_price,
+      ),
+    });
+
     return entity;
   }
 
   async cancelOrder({
     id,
     payload,
+    user_id,
   }: {
     id: string;
+    user_id: string;
     payload: CreateCancelOrderDto;
   }): Promise<OrderEntity> {
     const order = await this.findOne({ id });
@@ -89,16 +113,29 @@ export class OrdersService {
     if (updatedEntity === null) {
       throw new NotFoundException(ERRORS('Order not found'));
     }
+    const user = await this.usersService.findOne({ id: user_id });
+
     await sendMail({
       to: order.email,
-      subject: 'Order canceled',
-      text: 'Your order has been canceled',
-      html: 'Your order has been canceled',
+      subject: 'تم إلغاء طلبك',
+      text: 'لقد تم إلغاء طلبك',
+      html: orderCancellationTemplate(
+        user.roles.includes(RolesEnum.ADMIN),
+        updatedEntity,
+        updatedEntity.id,
+        payload.cancel_reason,
+      ),
     });
     return updatedEntity;
   }
 
-  async confirmOrder({ id }: { id: string }): Promise<OrderEntity> {
+  async confirmOrder({
+    id,
+    user_id,
+  }: {
+    id: string;
+    user_id: string;
+  }): Promise<OrderEntity> {
     const order = await this.findOne({ id });
     if (order.status === PaymentStatusEnum.PAID) {
       throw new NotFoundException(ERRORS('Order already confirmed'));
@@ -118,11 +155,19 @@ export class OrdersService {
         }),
       ),
     ]);
+    const user = await this.usersService.findOne({ id: user_id });
+
     await sendMail({
       to: order.email,
-      subject: 'Order confirmed',
-      text: 'Your order has been confirmed',
-      html: 'Your order has been confirmed',
+      subject: 'تم تأكيد طلبك',
+      text: 'لقد تم تأكيد طلبك',
+      html: orderDeliveryTemplate(
+        user.roles.includes(RolesEnum.ADMIN),
+        updatedEntity,
+        updatedEntity.id,
+        order.updated_at.toLocaleDateString(),
+        order.address,
+      ),
     });
     return updatedEntity;
   }
