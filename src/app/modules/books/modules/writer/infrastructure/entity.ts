@@ -9,6 +9,7 @@ import {
 export interface KyselyWriterEntity {
   id: GeneratedAlways<string>;
   name: string;
+  nationality: string | null;
   created_at: GeneratedAlways<Date>;
   updated_at: ColumnType<Date, never, Date>;
 }
