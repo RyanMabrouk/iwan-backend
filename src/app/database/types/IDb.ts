@@ -11,6 +11,8 @@ import { KyselySubcategoryEntity } from 'src/app/modules/books/modules/subcatego
 import { KyselyWriterEntity } from 'src/app/modules/books/modules/writer/infrastructure/entity';
 import { KyselyEventEntity } from 'src/app/modules/events/infrastructure/entity/entity';
 import { KyselyEventBooksEntity } from 'src/app/modules/events/infrastructure/entity/eventBooks';
+import { KyselyOffersEntity } from 'src/app/modules/offers/infrastructure/entity';
+import { KyselyOfferBooksEntity } from 'src/app/modules/offers/modules/offerBooks/infrastructure/entity';
 import { KyselyOrderEntity } from 'src/app/modules/payment/orders/infrastructure/entity/entity';
 import { KyselyOrderProductEntity } from 'src/app/modules/payment/orders/modules/order_products/infrastructure/entity';
 import { KyselyUserEntity } from 'src/app/modules/users/infrastructure/entity/entity';
@@ -34,4 +36,6 @@ export interface IDb {
   events: KyselyEventEntity;
   event_books: KyselyEventBooksEntity;
   reviews: KyselyReviewEntity;
+  offers: KyselyOffersEntity;
+  offer_books: KyselyOfferBooksEntity
 }

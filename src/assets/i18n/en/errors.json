@@ -25,5 +25,7 @@
   "Event not found": "Event not found",
   "Banner not found!": "Banner not found!",
   "Price after discount cannot be greater than price": "Price after discount cannot be greater than price",
-  "Review already exists!": "Review already exists!"
+  "Review already exists!": "Review already exists!",
+  "Offer not found": "Offer not found",
+  "price_after_offer must be less than price_before_offer": "Price after offer must be less than price before offer"
 }

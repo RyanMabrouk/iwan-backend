@@ -33,6 +33,8 @@ export type I18nTranslations = {
         "Banner not found!": string;
         "Price after discount cannot be greater than price": string;
         "Review already exists!": string;
+        "Offer not found": string;
+        "price_after_offer must be less than price_before_offer": string;
     };
     "properties": {
         "title": string;

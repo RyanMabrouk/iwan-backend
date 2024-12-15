@@ -1,18 +1,8 @@
 import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>) {
-  await db
-    .withSchema('public')
-    .schema.dropTable('book_subcategories')
-    .execute();
-  await db.withSchema('public').schema.dropTable('book_categories').execute();
-  await db.withSchema('public').schema.dropTable('books').execute();
-  await db.withSchema('public').schema.dropTable('subcategories').execute();
-  await db.withSchema('public').schema.dropTable('categories').execute();
-  await db.withSchema('public').schema.dropTable('cover_types').execute();
-  await db.withSchema('public').schema.dropTable('writers').execute();
-  await db.withSchema('public').schema.dropType('status_enum').execute();
-  await db.withSchema('public').schema.dropType('discount_type_enum').execute();
+
+  
   await db
     .withSchema('public')
     .schema.createTable('writers')
