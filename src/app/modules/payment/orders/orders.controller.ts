@@ -16,7 +16,11 @@ import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPagin
 import { OrderEntity } from './infrastructure/entity/entity';
 import { ITokenPayload } from 'src/app/shared/types/ITokenPayload';
 import { ITransaction } from 'src/app/database/types/transaction';
-import { CreateCancelOrderDto, CreateOrderDto } from './dto/create.dto';
+import {
+  CreateCancelOrderDto,
+  CreateOrderFromCartDto,
+  CreateOrderFromOfferDto,
+} from './dto/create.dto';
 import { OrdersService } from './orders.service';
 import { QueryOrderDto } from './dto/query.dto';
 import { UpdateOrderDto } from './dto/update.dto';
@@ -61,11 +65,24 @@ export class OrdersController {
   }
 
   @Post()
-  async create(
-    @Body() payload: CreateOrderDto,
+  async createFromCart(
+    @Body() payload: CreateOrderFromCartDto,
     @AuthenticatedUser() userJwt: ITokenPayload,
   ): Promise<OrderEntity> {
-    const res = await this.service.createOne({
+    const res = await this.service.createFromCart({
+      payload,
+      user_id: userJwt.sub,
+    });
+    this.trx.commit();
+    return res;
+  }
+
+  @Post('/offer')
+  async createFromOffer(
+    @Body() payload: CreateOrderFromOfferDto,
+    @AuthenticatedUser() userJwt: ITokenPayload,
+  ): Promise<OrderEntity> {
+    const res = await this.service.createFromOffer({
       payload,
       user_id: userJwt.sub,
     });

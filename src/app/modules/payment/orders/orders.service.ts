@@ -8,7 +8,12 @@ import { UpdateOrderDto } from './dto/update.dto';
 import { QueryOrderDto } from './dto/query.dto';
 import { OrderRepository } from './infrastructure/repositories/repository';
 import { OrderProductService } from './modules/order_products/OrderProduct.service';
-import { CreateCancelOrderDto, CreateOrderDto } from './dto/create.dto';
+import {
+  CreateCancelOrderDto,
+  CreateOrder,
+  CreateOrderFromCartDto,
+  CreateOrderFromOfferDto,
+} from './dto/create.dto';
 import { PaymentStatusEnum, RolesEnum } from 'src/types/other/enums.types';
 import { BooksService } from '../../books/book.service';
 import { sendMail } from 'src/app/mail/send';
@@ -17,6 +22,7 @@ import {
   orderDeliveryTemplate,
   orderPlacementTemplates,
 } from 'src/app/mail/templates/emailTemplates';
+import { CreateOrderProductDto } from './modules/order_products/dto';
 
 @Injectable()
 export class OrdersService {
@@ -42,20 +48,56 @@ export class OrdersService {
     return Order;
   }
 
-  async createOne({
+  async createFromCart({
     payload,
     user_id,
   }: {
-    payload: CreateOrderDto;
+    payload: CreateOrderFromCartDto;
     user_id: string;
+  }) {
+    const entity = await this.createOne({
+      payload,
+      user_id,
+      books: payload.books,
+    });
+
+    return entity;
+  }
+
+  async createFromOffer({
+    payload,
+    user_id,
+  }: {
+    payload: CreateOrderFromOfferDto;
+    user_id: string;
+  }) {
+    const entity = await this.createOne({
+      payload,
+      user_id,
+      offer_id: payload.offer_id,
+    });
+
+    return entity;
+  }
+
+  async createOne({
+    payload,
+    user_id,
+    books,
+    offer_id,
+  }: {
+    payload: CreateOrder;
+    user_id: string;
+    books?: CreateOrderProductDto[];
+    offer_id?: string;
   }): Promise<OrderEntity> {
-    const { books, ...rest } = payload;
-    const order = await this.factory.createFromEntity(
-      { books, ...rest },
-      { user_id },
-    );
+    const order = await this.factory.createFromEntity(payload, {
+      user_id,
+      offer_id,
+      books,
+    });
     const entity = await this.repository.createOne({
-      ...rest,
+      ...payload,
       total_price: order.total_price,
       delivery_price: order.delivery_price,
       user_id,
@@ -64,6 +106,7 @@ export class OrdersService {
     if (entity === null) {
       throw new NotFoundException(ERRORS('Order not found'));
     }
+
     await this.ordersProducts.createMany(
       order.books.map((book) => ({
         book_id: book.id,
@@ -74,6 +117,7 @@ export class OrdersService {
         order_id: entity?.id,
       })),
     );
+
     const user = await this.usersService.findOne({ id: user_id });
 
     await sendMail({

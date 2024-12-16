@@ -11,7 +11,7 @@ export class OfferRepository {
   constructor(
     @Inject(TRANSACTION_PROVIDER) private readonly trx: ITransaction,
   ) {}
-  async findOne({ id }: { id: string }): Promise<any | null> {
+  async findOne({ id }: { id: string }) {
     try {
       const res = await this.trx
         .selectFrom('offers')
@@ -21,17 +21,7 @@ export class OfferRepository {
             eb
               .selectFrom('offer_books')
               .innerJoin('books', 'books.id', 'offer_books.book_id')
-              .select([
-                'books.id',
-                'books.title',
-                'books.slug',
-                'books.images_urls',
-                'books.price',
-                'books.price_after_discount',
-                'books.discount',
-                'books.discount_type',
-                'books.price_dollar',
-              ])
+              .selectAll(['books'])
               .whereRef('offer_books.offer_id', '=', 'offers.id'),
           ).as('books'),
         )

@@ -13,13 +13,7 @@ import { PaymentMethodEnum } from 'src/types/other/enums.types';
 import { CreateOrderProductDto } from '../modules/order_products/dto';
 import { Type } from 'class-transformer';
 
-export class CreateOrderDto {
-  @IsArray({ message: TranslateDto('IsArray') })
-  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
-  @Type(() => CreateOrderProductDto)
-  @ValidateNested({ each: true })
-  books!: CreateOrderProductDto[];
-
+export class CreateOrder {
   @IsString({ message: TranslateDto('IsString') })
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   name!: string;
@@ -50,4 +44,18 @@ export class CreateOrderDto {
 export class CreateCancelOrderDto {
   @IsString({ message: TranslateDto('IsString') })
   cancel_reason!: string;
+}
+
+export class CreateOrderFromCartDto extends CreateOrder {
+  @IsArray({ message: TranslateDto('IsArray') })
+  @ArrayNotEmpty({ message: TranslateDto('ArrayNotEmpty') })
+  @Type(() => CreateOrderProductDto)
+  @ValidateNested({ each: true })
+  books!: CreateOrderProductDto[];
+}
+
+export class CreateOrderFromOfferDto extends CreateOrder {
+  @IsString({ message: TranslateDto('IsString') })
+  @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
+  offer_id!: string;
 }

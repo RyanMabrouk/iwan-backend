@@ -13,6 +13,7 @@ export class OrderProductService {
   }
 
   async createMany(payload: NewOrderProduct[]): Promise<OrderProductEntity[]> {
+    if (payload.length === 0) return [];
     return await this.OrderProductRepository.createMany(payload);
   }
 
