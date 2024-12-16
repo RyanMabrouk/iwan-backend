@@ -55,10 +55,11 @@ export class OrdersService {
     payload: CreateOrderFromCartDto;
     user_id: string;
   }) {
+    const { books, ...rest } = payload;
     const entity = await this.createOne({
-      payload,
+      payload: rest,
       user_id,
-      books: payload.books,
+      books,
     });
 
     return entity;
@@ -71,10 +72,11 @@ export class OrdersService {
     payload: CreateOrderFromOfferDto;
     user_id: string;
   }) {
+    const { offer_id, ...rest } = payload;
     const entity = await this.createOne({
-      payload,
+      payload: rest,
       user_id,
-      offer_id: payload.offer_id,
+      offer_id,
     });
 
     return entity;
