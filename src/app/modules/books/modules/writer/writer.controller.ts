@@ -7,13 +7,15 @@ import {
   Body,
   Param,
   Inject,
+  Query,
 } from '@nestjs/common';
 import { NewWriterDto, UpdateWriterDto } from './dto';
 import { TRANSACTION_PROVIDER } from 'src/app/database/conf/constants';
 import { ITransaction } from 'src/app/database/types/transaction';
-import { WriterEntity } from './infrastructure/entity';
+import { QueryWriterDto, WriterEntity } from './infrastructure/entity';
 import { WriterService } from './writer.service';
 import { IsPublic } from 'src/app/auth/IsPublic.decorator';
+import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 
 @Controller('writers')
 export class WriterController {
@@ -23,9 +25,22 @@ export class WriterController {
   ) {}
 
   @IsPublic()
-  @Get()
+  @Get('all')
   async findMany(): Promise<WriterEntity[]> {
     return this.WriterService.findMany();
+  }
+
+  @IsPublic()
+  @Get()
+  async findManyWithPagination(
+    @Query() query: QueryWriterDto,
+  ): Promise<InfinityPaginationResultType<WriterEntity>> {
+    return this.WriterService.findManyWithPagination(query);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<WriterEntity> {
+    return this.WriterService.findOne(id);
   }
 
   @Post()

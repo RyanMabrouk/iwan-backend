@@ -1,8 +1,14 @@
-import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
 import { NewWriter, UpdateWriter } from './infrastructure/entity';
 import { Optional } from '@nestjs/common';
 import { TranslateDto } from 'src/app/shared/utils/TranslateDto';
-import { countries } from './constants/countries';
+import { nationalities } from './constants/countries';
 
 export class NewWriterDto implements NewWriter {
   @IsString({ message: TranslateDto('IsString') })
@@ -10,8 +16,9 @@ export class NewWriterDto implements NewWriter {
   name!: string;
 
   @IsOptional()
+  @ValidateIf((e) => e.nationality !== null)
   @IsString({ message: TranslateDto('IsString') })
-  @IsIn(countries, { message: TranslateDto('IsIn') })
+  @IsIn(nationalities.map((e) => e.value), { message: TranslateDto('IsIn') })
   nationality?: string;
 }
 
@@ -22,7 +29,8 @@ export class UpdateWriterDto implements UpdateWriter {
   name?: string;
 
   @IsOptional()
+  @ValidateIf((e) => e.nationality !== null)
   @IsString({ message: TranslateDto('IsString') })
-  @IsIn(countries, { message: TranslateDto('IsIn') })
+  @IsIn(nationalities.map((e) => e.value), { message: TranslateDto('IsIn') })
   nationality?: string;
 }

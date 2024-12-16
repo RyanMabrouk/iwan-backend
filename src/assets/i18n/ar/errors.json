@@ -27,5 +27,6 @@
   "Price after discount cannot be greater than price": "لا يمكن أن يكون السعر بعد الخصم أكبر من السعر",
   "Review already exists!": "المراجعة موجودة بالفعل!",
   "Offer not found": "العرض غير موجود",
-  "price_after_offer must be less than price_before_offer": "يجب أن يكون السعر بعد العرض أقل من السعر قبل العرض"
+  "price_after_offer must be less than price_before_offer": "يجب أن يكون السعر بعد العرض أقل من السعر قبل العرض",
+  "Writer not found!": "الكاتب غير موجود!"
 }

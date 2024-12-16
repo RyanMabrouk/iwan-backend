@@ -1,8 +1,13 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { NewWriterDto, UpdateWriterDto } from './dto';
 import { WriterRepository } from './infrastructure/repository';
-import { WriterEntity } from './infrastructure/entity';
+import { QueryWriterDto, WriterEntity } from './infrastructure/entity';
 import { ERRORS } from 'src/assets/constants/errors';
+import { InfinityPaginationResultType } from 'src/app/shared/types/InfinityPaginationResultType';
 
 @Injectable()
 export class WriterService {
@@ -10,6 +15,20 @@ export class WriterService {
 
   async findMany(): Promise<WriterEntity[]> {
     return await this.WriterRepository.findMany();
+  }
+
+  async findManyWithPagination(
+    query: QueryWriterDto,
+  ): Promise<InfinityPaginationResultType<WriterEntity>> {
+    return await this.WriterRepository.findManyWithPagination(query);
+  }
+
+  async findOne(id: string): Promise<WriterEntity> {
+    const res = await this.WriterRepository.findOne({ id });
+    if (!res) {
+      throw new NotFoundException(ERRORS('Writer not found!'));
+    }
+    return res;
   }
 
   async createOne(payload: NewWriterDto): Promise<WriterEntity> {

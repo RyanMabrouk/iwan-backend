@@ -5,6 +5,7 @@ import {
   Selectable,
   Updateable,
 } from 'kysely';
+import { QueryDtoWithPagination } from 'src/app/shared/dto/QueryDtoWithPagination.dto';
 
 export interface KyselyWriterEntity {
   id: GeneratedAlways<string>;
@@ -17,3 +18,6 @@ export interface KyselyWriterEntity {
 export type WriterEntity = Selectable<KyselyWriterEntity>;
 export type NewWriter = Insertable<KyselyWriterEntity>;
 export type UpdateWriter = Updateable<KyselyWriterEntity>;
+
+export type IWriterKeys = `writers.${keyof KyselyWriterEntity}`;
+export class QueryWriterDto extends QueryDtoWithPagination<IWriterKeys> {}
