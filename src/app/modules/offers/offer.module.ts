@@ -9,5 +9,6 @@ import { OfferBookModule } from './modules/offerBooks/offerBook.module';
   imports: [DatabaseModule, OfferBookModule],
   controllers: [OfferController],
   providers: [OfferRepository, OfferService],
+  exports: [OfferRepository, OfferService],
 })
 export class OfferModule {}

@@ -10,6 +10,6 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
   imports: [DatabaseModule, WishlistModule],
   controllers: [UsersController],
   providers: [UserFactory, UserRepository, UsersService],
-  exports: [UserFactory, UserRepository, UsersService, WishlistModule],
+  exports: [UserFactory, UserRepository, UsersService],
 })
 export class UsersModule {}
