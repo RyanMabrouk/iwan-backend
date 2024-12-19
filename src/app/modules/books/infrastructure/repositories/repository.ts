@@ -259,6 +259,15 @@ export class BookRepository {
               'in',
               query.extra_filters?.subcategories_ids as string[],
             ),
+        )
+        .$if(!!query.extra_filters?.writer_nationality, (q) =>
+          q
+            .innerJoin('writers', 'writers.id', 'books.writer_id')
+            .where(
+              'writers.nationality',
+              '=',
+              query.extra_filters?.writer_nationality as string,
+            ),
         );
 
       const [res, total] = await Promise.all([

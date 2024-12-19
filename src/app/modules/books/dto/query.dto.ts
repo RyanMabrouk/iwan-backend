@@ -8,6 +8,8 @@ import {
 import { QueryDtoWithPagination } from '../../../shared/dto/QueryDtoWithPagination.dto';
 import { IQueryBookKeys } from '../infrastructure/entity/entity';
 import { Type } from 'class-transformer';
+import { nationalities } from '../modules/writer/constants/countries';
+import { TranslateDto } from 'src/app/shared/utils/TranslateDto';
 
 class ExtraBookFiltersDto {
   @IsOptional()
@@ -30,6 +32,10 @@ class ExtraBookFiltersDto {
   @IsArray()
   @ArrayNotEmpty()
   subcategories_ids?: string[];
+
+  @IsOptional()
+  @IsIn(nationalities.map((e) => e.value), { message: TranslateDto('IsIn') })
+  writer_nationality?: string;
 }
 
 export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
