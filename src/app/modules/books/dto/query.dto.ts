@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { QueryDtoWithPagination } from '../../../shared/dto/QueryDtoWithPagination.dto';
 import { IQueryBookKeys } from '../infrastructure/entity/entity';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { nationalities } from '../modules/writer/constants/countries';
 import { TranslateDto } from 'src/app/shared/utils/TranslateDto';
 
@@ -40,6 +40,7 @@ class ExtraBookFiltersDto {
 
 export class QueryBookDto extends QueryDtoWithPagination<IQueryBookKeys> {
   @IsOptional()
+  @Transform(({ value }) => JSON.parse(value))
   @Type(() => ExtraBookFiltersDto)
   extra_filters?: ExtraBookFiltersDto;
 }
