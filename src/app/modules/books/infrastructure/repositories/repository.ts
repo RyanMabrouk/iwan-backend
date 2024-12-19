@@ -230,7 +230,7 @@ export class BookRepository {
         .$if(!!query.extra_filters?.most_sold, (q) =>
           q
             .innerJoin('orders_products', 'orders_products.book_id', 'books.id')
-            .groupBy(['books.id', 'orders_products.id'])
+            .groupBy(['books.id'])
             .orderBy(
               this.trx.fn
                 .sum('orders_products.quantity')
