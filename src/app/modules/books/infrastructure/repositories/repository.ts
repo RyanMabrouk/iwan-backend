@@ -229,12 +229,13 @@ export class BookRepository {
         )
         .$if(!!query.extra_filters?.most_sold, (q) =>
           q
-            .innerJoin('orders_products', 'orders_products.book_id', 'books.id')
+            .leftJoin('orders_products', 'orders_products.book_id', 'books.id')
             .groupBy(['books.id'])
             .orderBy(
-              this.trx.fn
-                .sum('orders_products.quantity')
-                .filterWhereRef('orders_products.book_id', '=', 'books.id'),
+              (q) =>
+                q.fn
+                  .sum('orders_products.quantity')
+                  .filterWhereRef('orders_products.book_id', '=', 'books.id'),
               query.extra_filters?.most_sold,
             ),
         )
