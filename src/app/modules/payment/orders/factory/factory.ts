@@ -19,18 +19,22 @@ export class OrderFactory implements EntityFactory<CreateOrder, Order> {
     options: {
       user_id: string;
       books?: CreateOrderProductDto[];
-      offer_id?: string;
+      offer?: {
+        id: string;
+        quantity: number;
+      };
     },
   ): Promise<Order> {
-    const offer = options.offer_id
-      ? await this.offerService.findOne({ id: options.offer_id })
+    const offer_quantity = options.offer?.quantity ?? 1;
+    const offer = options.offer?.id
+      ? await this.offerService.findOne({ id: options.offer.id })
       : null;
     const [user, books] = await Promise.all([
       this.usersService.findOne({ id: options.user_id }),
       offer
         ? offer.books.map((book) => ({
             ...book,
-            quantity: 1,
+            quantity: offer_quantity,
           }))
         : this.bookService
             .findManyWithPagination({
@@ -56,7 +60,7 @@ export class OrderFactory implements EntityFactory<CreateOrder, Order> {
     return new Order({
       entity: payload,
       user,
-      offer: offer,
+      offer: offer ? { ...offer, quantity: offer_quantity } : null,
       books,
     });
   }

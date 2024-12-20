@@ -11,7 +11,11 @@ export class Order extends AggregateRoot {
   readonly books: (BookEntity & {
     quantity: number;
   })[];
-  readonly offer: OfferDetails | null;
+  readonly offer:
+    | (OfferDetails & {
+        quantity: number;
+      })
+    | null;
   readonly user: UserEntity;
   readonly total_price: number;
   readonly delivery_price: number;
@@ -26,7 +30,11 @@ export class Order extends AggregateRoot {
       quantity: number;
     })[];
     user: UserEntity;
-    offer: OfferDetails | null;
+    offer:
+      | (OfferDetails & {
+          quantity: number;
+        })
+      | null;
   }) {
     super();
     this.data = entity;
@@ -41,7 +49,7 @@ export class Order extends AggregateRoot {
   }
   private calculateTotalPrice(): number {
     if (this.offer) {
-      return this.offer.price_after_offer;
+      return this.offer.price_after_offer * this.offer.quantity;
     } else {
       return this.books.reduce((acc, book) => {
         return acc + book.price_after_discount * book.quantity;

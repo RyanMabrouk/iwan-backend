@@ -4,6 +4,8 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsPositive,
   IsPostalCode,
   IsString,
   ValidateNested,
@@ -58,4 +60,8 @@ export class CreateOrderFromOfferDto extends CreateOrder {
   @IsString({ message: TranslateDto('IsString') })
   @IsNotEmpty({ message: TranslateDto('IsNotEmpty') })
   offer_id!: string;
+
+  @IsNumber({}, { message: TranslateDto('IsNumber') })
+  @IsPositive({ message: TranslateDto('IsPositive') })
+  quantity!: number;
 }

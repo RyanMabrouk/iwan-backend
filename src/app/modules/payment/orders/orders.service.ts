@@ -72,11 +72,14 @@ export class OrdersService {
     payload: CreateOrderFromOfferDto;
     user_id: string;
   }) {
-    const { offer_id, ...rest } = payload;
+    const { offer_id, quantity, ...rest } = payload;
     const entity = await this.createOne({
       payload: rest,
       user_id,
-      offer_id,
+      offer: {
+        quantity,
+        id: offer_id,
+      },
     });
 
     return entity;
@@ -86,16 +89,19 @@ export class OrdersService {
     payload,
     user_id,
     books,
-    offer_id,
+    offer,
   }: {
     payload: CreateOrder;
     user_id: string;
     books?: CreateOrderProductDto[];
-    offer_id?: string;
+    offer?: {
+      id: string;
+      quantity: number;
+    };
   }): Promise<OrderEntity> {
     const order = await this.factory.createFromEntity(payload, {
       user_id,
-      offer_id,
+      offer,
       books,
     });
     const entity = await this.repository.createOne({
