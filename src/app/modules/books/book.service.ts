@@ -55,10 +55,19 @@ export class BooksService {
   }): Promise<BookEntity> {
     const { categories_ids, subcategories_ids, ...rest } = payload;
     const oldEntity = await this.findOne({ id });
-    this.factory.createFromEntity({ ...oldEntity, ...rest });
+    const domain = this.factory.createFromEntity({ ...oldEntity, ...rest });
     const updatedEntity = await this.repository.updateOne({
       id,
-      payload: rest,
+      payload: {
+        ...rest,
+        price_after_discount: parseFloat(
+          Book.calculatePriceAfterDiscount({
+            price: parseFloat(domain.data.price?.toFixed(2)),
+            discount: parseFloat(domain.data.discount?.toFixed(2)),
+            discount_type: domain.data.discount_type,
+          })?.toFixed(2),
+        ),
+      },
     });
 
     if (!updatedEntity) {

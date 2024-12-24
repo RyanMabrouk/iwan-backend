@@ -385,7 +385,7 @@ export class BookRepository {
   async updateOne(
     args: {
       id: string;
-    } & { payload: UpdateBookDto },
+    } & { payload: UpdateBookDto & { price_after_discount?: number } },
   ): Promise<BookEntity | null> {
     try {
       const res = await this.trx
