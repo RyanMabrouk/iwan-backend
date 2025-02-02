@@ -105,7 +105,7 @@ export class BookRepository {
                         .whereRef('wishlists.book_id', '=', 'books.id')
                         .select('wishlists.book_id'),
                     ).as('wishlist')
-                  : 'this_book.id',
+                  : 'books.id', // this is so typescript doesn't complain,
               ]),
           ).as('recommended_books'),
           jsonArrayFrom(
