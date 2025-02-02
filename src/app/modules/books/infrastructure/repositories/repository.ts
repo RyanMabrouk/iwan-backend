@@ -89,16 +89,8 @@ export class BookRepository {
                 'book_categories.category_id',
               )
               .limit(8)
+              .selectAll(['books'])
               .select((qb) => [
-                'books.id',
-                'books.title',
-                'books.slug',
-                'books.images_urls',
-                'books.price',
-                'books.price_after_discount',
-                'books.discount',
-                'books.discount_type',
-                'books.price_dollar',
                 jsonObjectFrom(
                   qb
                     .selectFrom('writers')
