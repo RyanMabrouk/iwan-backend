@@ -41,6 +41,16 @@ export class BooksController {
   }
 
   @IsPublic()
+  @Get('slugs')
+  async getSlugs(): Promise<
+    {
+      slug: string;
+    }[]
+  > {
+    return await this.service.findSlugs();
+  }
+
+  @IsPublic()
   @Get(':id')
   async get(
     @Param('id', ParseUUIDPipe) id: string,
