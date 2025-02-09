@@ -30,6 +30,14 @@ export class BooksService {
     return this.repository.findManyWithPagination(query, user_id);
   }
 
+  async findSlugs(): Promise<
+    {
+      slug: string;
+    }[]
+  > {
+    return await this.repository.findSlugs();
+  }
+
   async findOne({
     id,
     slug,
