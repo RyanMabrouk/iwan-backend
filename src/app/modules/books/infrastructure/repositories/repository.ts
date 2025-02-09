@@ -199,6 +199,15 @@ export class BookRepository {
     }
   }
 
+  async findSlugs() {
+    try {
+      const res = await this.trx.selectFrom('books').select('slug').execute();
+      return res;
+    } catch (err) {
+      throw new PostgresError(err);
+    }
+  }
+
   async findManyWithPagination(
     query: QueryBookDto,
     user_id?: string,
