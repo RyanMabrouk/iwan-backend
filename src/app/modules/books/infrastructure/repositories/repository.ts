@@ -24,20 +24,31 @@ export class BookRepository {
   ) {}
   async findOne({
     id,
+    slug,
     user_id,
   }: {
-    id: string;
+    id?: string;
+    slug?: string;
     user_id?: string;
   }): Promise<IBookDetails | null> {
     try {
       const res = await this.trx
         .with('this_book', (q) =>
-          q.selectFrom('books').where('id', '=', id).selectAll('books'),
+          q
+            .selectFrom('books')
+            .$if(!!id, (q) => q.where('id', '=', id as string))
+            .$if(!!slug, (q) => q.where('slug', '=', slug as string))
+            .selectAll('books'),
         )
         .with('this_book_categories', (q) =>
           q
             .selectFrom('book_categories')
-            .where(`book_categories.book_id`, '=', id)
+            .$if(!!id, (q) => q.where('book_id', '=', id as string))
+            .$if(!!slug, (q) =>
+              q
+                .innerJoin('books', 'books.id', 'book_id')
+                .where('books.slug', '=', slug as string),
+            )
             .innerJoin(
               'categories',
               'categories.id',
@@ -53,10 +64,10 @@ export class BookRepository {
                 q
                   .selectFrom('wishlists')
                   .where('wishlists.user_id', '=', user_id)
-                  .where('wishlists.book_id', '=', id)
+                  .whereRef('wishlists.book_id', '=', 'this_book.id')
                   .select('wishlists.book_id'),
               ).as('wishlist')
-            : 'this_book.id', // this is so typescript doesn't complain
+            : 'this_book.corner_id', // this is so typescript doesn't complain
           jsonArrayFrom(
             q
               .selectFrom('books')
@@ -105,7 +116,7 @@ export class BookRepository {
                         .whereRef('wishlists.book_id', '=', 'books.id')
                         .select('wishlists.book_id'),
                     ).as('wishlist')
-                  : 'books.id', // this is so typescript doesn't complain,
+                  : 'books.corner_id', // this is so typescript doesn't complain,
               ]),
           ).as('recommended_books'),
           jsonArrayFrom(
@@ -116,7 +127,7 @@ export class BookRepository {
           jsonArrayFrom(
             q
               .selectFrom('book_subcategories')
-              .where(`book_subcategories.book_id`, '=', id)
+              .whereRef(`book_subcategories.book_id`, '=', 'this_book.id')
               .innerJoin(
                 'subcategories',
                 'subcategories.id',
@@ -151,15 +162,15 @@ export class BookRepository {
           jsonObjectFrom(
             q
               .selectFrom('reviews')
-              .where('reviews.book_id', '=', id)
+              .whereRef('reviews.book_id', '=', 'this_book.id')
               .select((qb) => [
                 qb.fn
                   .sum('reviews.rating')
-                  .filterWhere('reviews.book_id', '=', id)
+                  .filterWhereRef('reviews.book_id', '=', 'this_book.id')
                   .as('total_reviews_rating'),
                 qb.fn
                   .count('reviews.id')
-                  .filterWhere('reviews.book_id', '=', id)
+                  .filterWhereRef('reviews.book_id', '=', 'this_book.id')
                   .as('total_reviews_count'),
               ]),
           ).as('reviews_stats'),

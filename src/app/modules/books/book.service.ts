@@ -32,12 +32,14 @@ export class BooksService {
 
   async findOne({
     id,
+    slug,
     user_id,
   }: {
-    id: string;
+    id?: string;
+    slug?: string;
     user_id?: string;
   }): Promise<IBookPopulated> {
-    const user = await this.repository.findOne({ id, user_id });
+    const user = await this.repository.findOne({ id, slug, user_id });
     if (user === null) {
       throw new NotFoundException(ERRORS('Book not found'));
     }
@@ -135,6 +137,7 @@ export class BooksService {
     const { categories_ids, subcategories_ids, ...rest } = payload;
     const book = this.factory.createFromEntity({
       ...rest,
+      slug: rest.slug || rest.title.toLowerCase().replace(/ /g, '-'),
       price_after_discount: parseFloat(
         Book.calculatePriceAfterDiscount({
           price: parseFloat(rest.price?.toFixed(2)),

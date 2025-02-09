@@ -49,6 +49,15 @@ export class BooksController {
     return this.service.findOne({ id, user_id: userJwt?.sub });
   }
 
+  @IsPublic()
+  @Get('/slug/:slug')
+  async getBySlug(
+    @Param('slug') slug: string,
+    @AuthenticatedUser() userJwt?: ITokenPayload,
+  ): Promise<IBookPopulated> {
+    return this.service.findOne({ slug, user_id: userJwt?.sub });
+  }
+
   @Patch(':id')
   async patch(
     @Param('id', ParseUUIDPipe) id: string,
